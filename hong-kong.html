@@ -2,23 +2,18 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- 1. 核心 SEO Title 与 Description（针对开发者与技术采购搜索意图优化） -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
   <title>香港AS4809双向CN2 GIA云服务器网络评测与CMI/PCCW路由对比-LuckVM</title>
   <meta name="description" content="深度解析LuckVM香港数据中心AS4809双向CN2 GIA与BGP多线路由架构。提供中国大陆电信、联通、移动去回程延迟实测（沿海<10ms，全国5-22ms，丢包率<0.3%）、CMI与PCCW线路对比、Looking Glass测速指南及KVM虚拟化>3000MB/s NVMe硬件参数。">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 
-  <!-- 2. 规范网址 Canonical（GitHub Pages 强制统一使用带尾部斜杠的绝对路径） -->
   <link rel="canonical" href="https://luckvm-cloud.github.io/zh/vps/hong-kong/">
-
-  <!-- 3. 多语言 Hreflang 双向互指簇 -->
   <link rel="alternate" hreflang="zh-CN" href="https://luckvm-cloud.github.io/zh/vps/hong-kong/">
   <link rel="alternate" hreflang="zh-TW" href="https://luckvm-cloud.github.io/tw/vps/hong-kong/">
   <link rel="alternate" hreflang="en" href="https://luckvm-cloud.github.io/en/vps/hong-kong/">
   <link rel="alternate" hreflang="x-default" href="https://luckvm-cloud.github.io/en/vps/hong-kong/">
 
-  <!-- 4. Open Graph 与社交卡片元数据 -->
   <meta property="og:type" content="article">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:site_name" content="LuckVM Infrastructure & Network Docs">
@@ -26,10 +21,7 @@
   <meta property="og:description" content="大陆沿海延迟<10ms，全国5-22ms，丢包率<0.3%。详解LuckVM香港KVM云服务器双向CN2 GIA路由拓扑、70GB NVMe (>3000MB/s) 存储基准与配置价格矩阵。">
   <meta property="og:url" content="https://luckvm-cloud.github.io/zh/vps/hong-kong/">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="香港AS4809双向CN2 GIA云服务器网络架构与技术规范 - LuckVM">
-  <meta name="twitter:description" content="双向CN2 GIA (AS4809) + BGP多线直连，标配70GB NVMe SSD与10Mbps独享不限流量带宽，$8.80/月起。">
 
-  <!-- 5. 真实合规的 Schema.org 结构化数据 (TechArticle + Product + FAQPage) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -41,39 +33,17 @@
         "inLanguage": "zh-CN",
         "datePublished": "2026-10-13",
         "dateModified": "2026-10-23",
-        "author": {
-          "@type": "Organization",
-          "name": "LuckVM Cloud Infrastructure Team",
-          "url": "https://www.luckvm.com/zh/index.html"
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": "LuckVM",
-          "url": "https://www.luckvm.com/zh/index.html"
-        },
-        "mainEntityOfPage": {
-          "@type": "WebPage",
-          "@id": "https://luckvm-cloud.github.io/zh/vps/hong-kong/"
-        }
+        "author": { "@type": "Organization", "name": "LuckVM Cloud Infrastructure Team", "url": "https://www.luckvm.com/zh/index.html" },
+        "publisher": { "@type": "Organization", "name": "LuckVM", "url": "https://www.luckvm.com/zh/index.html" },
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "https://luckvm-cloud.github.io/zh/vps/hong-kong/" }
       },
       {
         "@type": "Product",
         "name": "LuckVM 香港 CN2 GIA 云服务器 (KVM NVMe VPS)",
-        "brand": {
-          "@type": "Brand",
-          "name": "LuckVM"
-        },
+        "brand": { "@type": "Brand", "name": "LuckVM" },
         "description": "香港数据中心KVM全虚拟化云服务器，采用双向CN2 GIA (AS4809) 三网直连与BGP多线架构，标配70GB NVMe SSD固态阵列（读写>3000MB/s）、10Mbps独享不限流量带宽、独立IPv4/IPv6及DDoS防护。",
         "url": "https://www.luckvm.com/zh/hk-cloud-server.html",
         "category": "Infrastructure as a Service (IaaS) / Cloud VPS",
-        "additionalProperty": [
-          { "@type": "PropertyValue", "name": "AS自治系统与线路", "value": "AS4809 双向 CN2 GIA + BGP (含CMI/PCCW路由调优)" },
-          { "@type": "PropertyValue", "name": "虚拟化技术", "value": "KVM 全虚拟化 (支持自定义ISO与VNC)" },
-          { "@type": "PropertyValue", "name": "存储I/O吞吐", "value": "70GB NVMe SSD 阵列 (>3000 MB/s)" },
-          { "@type": "PropertyValue", "name": "中国大陆往返延迟", "value": "沿海 <10ms / 全国 5-22ms / 丢包率 <0.3%" },
-          { "@type": "PropertyValue", "name": "端口带宽规格", "value": "10Mbps 独享 CN2 GIA (可升级至 100Mbps-1Gbps 专线)" },
-          { "@type": "PropertyValue", "name": "服务等级协议 (SLA)", "value": "99.9% 在线率保障" }
-        ],
         "offers": {
           "@type": "AggregateOffer",
           "priceCurrency": "USD",
@@ -81,61 +51,11 @@
           "highPrice": "211.20",
           "offerCount": "3",
           "offers": [
-            {
-              "@type": "Offer",
-              "name": "Entry 入门型 (1 vCPU / 1GB RAM / 70GB NVMe / 10Mbps CN2 GIA)",
-              "price": "8.80",
-              "priceCurrency": "USD",
-              "availability": "https://schema.org/InStock",
-              "url": "https://www.luckvm.com/zh/hk-cloud-server.html"
-            },
-            {
-              "@type": "Offer",
-              "name": "Medium 中级型 (1 vCPU / 2GB RAM / 70GB NVMe / 10Mbps CN2 GIA)",
-              "price": "14.30",
-              "priceCurrency": "USD",
-              "availability": "https://schema.org/InStock",
-              "url": "https://www.luckvm.com/zh/hk-cloud-server.html"
-            },
-            {
-              "@type": "Offer",
-              "name": "Advanced 高级型 (2 vCPU / 2GB RAM / 70GB NVMe / 10Mbps CN2 GIA)",
-              "price": "17.60",
-              "priceCurrency": "USD",
-              "availability": "https://schema.org/InStock",
-              "url": "https://www.luckvm.com/zh/hk-cloud-server.html"
-            }
+            { "@type": "Offer", "name": "入门款 (1C/1G/70G NVMe/10M CN2 GIA)", "price": "8.80", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.luckvm.com/zh/hk-cloud-server.html" },
+            { "@type": "Offer", "name": "中级款 (1C/2G/70G NVMe/10M CN2 GIA)", "price": "14.30", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.luckvm.com/zh/hk-cloud-server.html" },
+            { "@type": "Offer", "name": "高级款 (2C/2G/70G NVMe/10M CN2 GIA)", "price": "17.60", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.luckvm.com/zh/hk-cloud-server.html" }
           ]
         }
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "如何在部署业务前验证香港CN2 GIA节点的去程与回程路由？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "建议在部署前通过LuckVM香港Looking Glass测速工具或从目标用户所在的实际运营商网络（电信、联通、移动）执行MTR与Traceroute测试，核验去程与回程是否经过AS4809节点，并记录晚高峰时段的延迟、抖动与服务端口连通性。"
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "香港云服务器的2-10Mbps CN2 GIA带宽与20-100Mbps国际带宽有何区别？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "两者均为100%独享不限流量带宽且高峰期不限速。2-10Mbps CN2 GIA优化带宽专为中国大陆及亚太双向低延迟直连场景设计（大陆延迟5-22ms）；20-100Mbps国际带宽则侧重面向欧美及海外全球访客的大吞吐量访问。企业用户还可升级至100Mbps-1Gbps BGP多线专线。"
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "实例支持哪些Linux内核版本与Windows Server镜像？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "免费提供Ubuntu (20.04/22.04)、CentOS (7/8)、Debian (10/11)、Rocky Linux、AlmaLinux、Fedora、openEuler与TencentOS；同时支持Windows Server 2019/2022（授权费约$8-$15/月），并支持上传自定义ISO镜像与控制台一键重装。"
-            }
-          }
-        ]
       }
     ]
   }
@@ -151,18 +71,13 @@
       --border-color: #d1d9e0;
       --accent-blue: #0969da;
       --accent-blue-hover: #0550ae;
-      --accent-green: #1a7f37;
       --badge-bg: #ddf4ff;
       --badge-text: #0969da;
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
-      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     body {
       font-family: var(--font-sans);
@@ -170,13 +85,14 @@
       color: var(--text-primary);
       line-height: 1.65;
       font-size: 15px;
+      overflow-x: hidden;
     }
 
-    /* 顶部 GitHub Docs 风格导航栏 */
+    /* 顶部导航（支持手机端横向顺滑滑动） */
     .topbar {
       background-color: #24292f;
       color: #ffffff;
-      padding: 12px 24px;
+      padding: 10px 16px;
       border-bottom: 1px solid #30363d;
       position: sticky;
       top: 0;
@@ -190,12 +106,12 @@
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand-title {
       font-weight: 700;
-      font-size: 16px;
+      font-size: 15.5px;
       color: #ffffff;
       text-decoration: none;
       display: flex;
@@ -214,59 +130,50 @@
 
     .top-nav {
       display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      font-size: 13.5px;
+      gap: 14px;
+      font-size: 13px;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
     }
 
     .top-nav a {
       color: #e6edf3;
       text-decoration: none;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
     }
 
-    .top-nav a:hover {
-      color: #58a6ff;
-      text-decoration: underline;
-    }
-
-    /* 主体双栏文档布局 */
+    /* 主体布局 */
     .layout-wrapper {
       max-width: 1180px;
       margin: 24px auto;
-      padding: 0 20px;
+      padding: 0 16px;
       display: grid;
       grid-template-columns: 250px 1fr;
-      gap: 28px;
+      gap: 24px;
       align-items: start;
     }
 
-    @media (max-width: 900px) {
-      .layout-wrapper {
-        grid-template-columns: 1fr;
-      }
-      .sidebar {
-        position: static !important;
-      }
-    }
-
-    /* 左侧目录与快速转化侧栏 */
+    /* 桌面端侧栏 */
     .sidebar {
       position: sticky;
-      top: 72px;
+      top: 68px;
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 18px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
     .sidebar-title {
       font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
       color: var(--text-secondary);
       border-bottom: 1px solid var(--border-color);
       padding-bottom: 8px;
@@ -276,22 +183,21 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
       font-size: 13.5px;
     }
 
     .toc-list a {
       color: var(--text-secondary);
       text-decoration: none;
-      display: block;
-      padding: 4px 6px;
-      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 4px 8px;
+      border-radius: 6px;
     }
 
-    .toc-list a:hover {
-      background: var(--bg-body);
-      color: var(--accent-blue);
-    }
+    .toc-list a:hover { background: var(--bg-body); color: var(--accent-blue); }
 
     .sidebar-cta {
       background: #f0f6fc;
@@ -308,37 +214,55 @@
       color: #ffffff;
       text-decoration: none;
       text-align: center;
+      min-height: 42px;
       padding: 8px 12px;
       border-radius: 6px;
       font-weight: 600;
       font-size: 13px;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .sidebar-cta-btn:hover {
-      background: var(--accent-blue-hover);
+    /* 手机端折叠目录（默认桌面端隐藏） */
+    .mobile-toc {
+      display: none;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px 14px;
     }
 
-    /* 右侧主文档容器 */
+    .mobile-toc summary {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--accent-blue);
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .mobile-toc summary::-webkit-details-marker { display: none; }
+    .mobile-toc summary::after { content: "▼ 展开章节"; font-size: 12px; }
+    .mobile-toc[open] summary::after { content: "▲ 收起"; }
+
+    /* 主文档容器 */
     .doc-main {
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 32px;
+      padding: 28px;
       display: flex;
       flex-direction: column;
-      gap: 32px;
+      gap: 28px;
+      min-width: 0;
     }
 
-    @media (max-width: 600px) {
-      .doc-main {
-        padding: 20px 16px;
-      }
-    }
-
-    /* 面包屑与元数据栏 */
     .breadcrumb {
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--text-secondary);
       display: flex;
       flex-wrap: wrap;
@@ -346,337 +270,301 @@
       align-items: center;
     }
 
-    .breadcrumb a {
-      color: var(--accent-blue);
-      text-decoration: none;
-    }
+    .breadcrumb a { color: var(--accent-blue); text-decoration: none; }
 
     .doc-header {
       border-bottom: 1px solid var(--border-color);
-      padding-bottom: 24px;
+      padding-bottom: 20px;
       display: flex;
       flex-direction: column;
       gap: 14px;
     }
 
-    .tech-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
+    .tech-badges { display: flex; flex-wrap: wrap; gap: 6px; }
     .tech-badge {
       background: var(--badge-bg);
       color: var(--badge-text);
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
-      padding: 3px 10px;
+      padding: 3px 9px;
       border-radius: 999px;
       border: 1px solid #b6e3ff;
     }
 
     h1 {
-      font-size: clamp(22px, 3vw, 30px);
+      font-size: clamp(20px, 4vw, 28px);
       font-weight: 700;
       line-height: 1.3;
-      color: var(--text-primary);
     }
 
-    .doc-lead {
-      font-size: 15.5px;
-      color: var(--text-secondary);
-    }
+    .doc-lead { font-size: 14.5px; color: var(--text-secondary); }
 
-    /* 关键指标网格 */
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
       background: var(--bg-body);
-      padding: 16px;
+      padding: 14px;
       border-radius: 8px;
       border: 1px solid var(--border-color);
     }
 
-    .kpi-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
+    .kpi-item { display: flex; flex-direction: column; gap: 2px; }
+    .kpi-code { font-family: var(--font-mono); font-size: clamp(16px, 2.5vw, 20px); font-weight: 700; color: var(--accent-blue); }
+    .kpi-desc { font-size: 12px; color: var(--text-secondary); }
 
-    .kpi-code {
-      font-family: var(--font-mono);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--accent-blue);
-    }
+    section { display: flex; flex-direction: column; gap: 14px; }
+    h2 { font-size: clamp(17px, 3vw, 20px); font-weight: 700; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+    h3 { font-size: 15.5px; font-weight: 700; margin-top: 4px; }
 
-    .kpi-desc {
-      font-size: 12.5px;
-      color: var(--text-secondary);
-    }
-
-    /* 章节标题与排版 */
-    section {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    h2 {
-      font-size: 20px;
-      font-weight: 700;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border-color);
-      color: var(--text-primary);
-    }
-
-    h3 {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-top: 4px;
-    }
-
-    p {
-      color: var(--text-primary);
-    }
-
-    /* Markdown 风格数据表格 */
+    /* 数据表格 */
     .table-container {
       width: 100%;
-      overflow-x: auto;
       border: 1px solid var(--border-color);
       border-radius: 6px;
+      overflow: hidden;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13.5px;
-      text-align: left;
-    }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+    th { background: var(--bg-body); font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+    tr:last-child td { border-bottom: none; }
+    tr.recommended-row td { background-color: #f0f6fc; }
 
-    th {
-      background: var(--bg-body);
-      font-weight: 700;
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border-color);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    tr.recommended-row {
-      background-color: #f0f6fc;
-    }
-
-    code.inline-code {
-      font-family: var(--font-mono);
-      background: rgba(175, 184, 193, 0.2);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 12.5px;
-    }
-
-    /* 终端代码块 */
     .code-block {
       background: var(--bg-code);
       color: #e6edf3;
       border-radius: 8px;
-      padding: 16px;
+      padding: 14px;
       font-family: var(--font-mono);
-      font-size: 13px;
+      font-size: 12.5px;
       line-height: 1.55;
+      max-width: 100%;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
-    .code-comment {
-      color: #8b949e;
-    }
+    .code-comment { color: #8b949e; }
 
-    /* 核对清单卡片 */
     .checklist-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
     }
 
     .check-card {
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      padding: 16px;
+      padding: 14px;
       background: var(--bg-body);
     }
 
-    .check-card h3 {
-      font-size: 15px;
-      margin-bottom: 6px;
-      color: var(--accent-blue);
-    }
+    .check-card h3 { font-size: 14.5px; margin-bottom: 6px; color: var(--accent-blue); }
+    .check-card p { font-size: 13px; color: var(--text-secondary); }
 
-    .check-card p {
-      font-size: 13.5px;
-      color: var(--text-secondary);
-    }
-
-    /* 底部按钮组与跨站内链 */
     .action-banner {
       background: #f0f6fc;
       border: 1px solid #b6e3ff;
       border-radius: 8px;
-      padding: 20px 24px;
+      padding: 18px 20px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
-    .btn-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 10px; }
 
-    .btn-solid {
-      background: var(--accent-blue);
-      color: #ffffff;
-      text-decoration: none;
+    .btn-solid, .btn-outline {
+      min-height: 44px;
       padding: 10px 18px;
       border-radius: 6px;
       font-weight: 600;
       font-size: 14px;
-    }
-
-    .btn-solid:hover {
-      background: var(--accent-blue-hover);
-    }
-
-    .btn-outline {
-      background: #ffffff;
-      color: var(--accent-blue);
-      border: 1px solid var(--accent-blue);
       text-decoration: none;
-      padding: 10px 16px;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
+
+    .btn-solid { background: var(--accent-blue); color: #ffffff; }
+    .btn-outline { background: #ffffff; color: var(--accent-blue); border: 1px solid var(--accent-blue); }
 
     .doc-footer {
       max-width: 1180px;
       margin: 20px auto 40px;
-      padding: 0 20px;
-      font-size: 13px;
+      padding: 0 16px;
+      font-size: 12.5px;
       color: var(--text-secondary);
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .doc-footer a {
-      color: var(--accent-blue);
-      text-decoration: none;
+    .doc-footer a { color: var(--accent-blue); text-decoration: none; }
+
+    /* 手机端底部固定转化栏（默认桌面隐藏） */
+    .mobile-sticky-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      padding: 10px 14px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+      z-index: 200;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    /* ====== 移动端与平板端媒体查询 ====== */
+    @media (max-width: 900px) {
+      .layout-wrapper { grid-template-columns: 1fr; margin: 12px auto; }
+      .sidebar { display: none; }
+      .mobile-toc { display: block; }
+      .checklist-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      body { padding-bottom: 72px; }
+      .doc-main { padding: 18px 14px; gap: 22px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+      /* 手机端表格自动转化为堆叠卡片 */
+      .table-container { border: none; background: transparent; }
+      table, thead, tbody, th, td, tr { display: block; width: 100%; }
+      thead tr { position: absolute; top: -9999px; left: -9999px; }
+      tbody tr {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 12px;
+        background: #ffffff;
+        overflow: hidden;
+      }
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        text-align: right;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--text-primary);
+        text-align: left;
+        flex-shrink: 0;
+      }
+
+      .action-banner { flex-direction: column; align-items: stretch; }
+      .btn-group { flex-direction: column; width: 100%; }
+      .btn-solid, .btn-outline { width: 100%; }
+      .mobile-sticky-bar { display: flex; }
     }
   </style>
 </head>
 <body>
 
-  <!-- 顶部技术文档导航 -->
   <header class="topbar">
     <div class="topbar-inner">
       <a href="https://www.luckvm.com/zh/index.html" class="brand-title">
-        <span>LuckVM Cloud Docs</span>
+        <span>LuckVM Docs</span>
         <span class="brand-tag">HKG-AS4809</span>
       </a>
       <nav class="top-nav" aria-label="全球节点与产品线技术索引">
-        <a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港云服务器主页</a>
-        <a href="https://www.luckvm.com/zh/looking-glass.html?region=hk">Looking Glass 测速</a>
-        <a href="https://www.luckvm.com/zh/physical-server-purchase.html">独立物理服务器</a>
-        <a href="https://www.luckvm.com/zh/gpu-server-purchase.html">AI GPU 算力实例</a>
-        <a href="https://www.luckvm.com/zh/bare-metal-server.html">裸金属宿主机</a>
+        <a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港云服务器</a>
+        <a href="https://www.luckvm.com/zh/looking-glass.html?region=hk">Looking Glass</a>
+        <a href="https://www.luckvm.com/zh/physical-server-purchase.html">独立物理机</a>
+        <a href="https://www.luckvm.com/zh/gpu-server-purchase.html">GPU 算力</a>
+        <a href="https://www.luckvm.com/zh/bare-metal-server.html">宿主机</a>
       </nav>
     </div>
   </header>
 
   <div class="layout-wrapper">
-    <!-- 左侧固定章节索引与快速入口 -->
-    <aside class="sidebar" aria-label="文档目录导航">
+    <!-- 桌面端左侧固定目录 -->
+    <aside class="sidebar" aria-label="桌面端文档目录">
       <div class="sidebar-title">技术文档目录 (TOC)</div>
       <ul class="toc-list">
-        <li><a href="#routing-architecture">1. AS4809 路由与 CMI/PCCW 对比</a></li>
+        <li><a href="#routing-architecture">1. AS4809 与 CMI/PCCW 对比</a></li>
         <li><a href="#latency-matrix">2. 亚太与大陆三网延迟基准</a></li>
-        <li><a href="#hardware-specs">3. KVM 硬件规格与周期价格表</a></li>
-        <li><a href="#cli-verification">4. 部署前网络与 I/O 验证指南</a></li>
-        <li><a href="#os-environment">5. 操作系统镜像与 SLA 规范</a></li>
-        <li><a href="#engineering-faq">6. 架构师常见技术问答 (FAQ)</a></li>
+        <li><a href="#hardware-specs">3. KVM 硬件规格与价格矩阵</a></li>
+        <li><a href="#cli-verification">4. 终端路由与 I/O 验证指令</a></li>
+        <li><a href="#engineering-faq">5. 架构师常见技术问答</a></li>
       </ul>
-
       <div class="sidebar-cta">
-        <div style="font-size: 13px; font-weight: 700; color: var(--text-primary);">香港 CN2 GIA 实例交付</div>
-        <div style="font-size: 12px; color: var(--text-secondary);">免备案 · 付款后 1-5 分钟自动开通，标配 70GB NVMe 与独立双栈 IP。</div>
+        <div style="font-size: 13px; font-weight: 700;">香港 CN2 GIA 实例交付</div>
+        <div style="font-size: 12px; color: var(--text-secondary);">免备案 1-5 分钟自动开通，标配 70GB NVMe 与独立双栈 IP。</div>
         <a href="https://www.luckvm.com/zh/hk-cloud-server.html" class="sidebar-cta-btn">前往官网查看实时库存 →</a>
       </div>
     </aside>
 
-    <!-- 右侧核心技术文档区 -->
+    <!-- 主文档区 -->
     <main class="doc-main">
       <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="https://www.luckvm.com/zh/index.html">LuckVM 基础设施文档</a>
+        <a href="https://www.luckvm.com/zh/index.html">LuckVM 文档中心</a>
         <span>/</span>
-        <a href="https://www.luckvm.com/zh/cloud-server-purchase.html">全球云服务器 (VPS)</a>
+        <a href="https://www.luckvm.com/zh/cloud-server-purchase.html">云服务器 (VPS)</a>
         <span>/</span>
         <span>中国香港节点 (HKG)</span>
       </nav>
 
-      <!-- H1 主标题区 -->
       <header class="doc-header">
         <div class="tech-badges">
-          <span class="tech-badge">Route: AS4809 Two-Way CN2 GIA + BGP</span>
-          <span class="tech-badge">Hypervisor: KVM Full Virtualization</span>
-          <span class="tech-badge">Storage: NVMe SSD &gt;3000 MB/s</span>
-          <span class="tech-badge">Stack: Dedicated IPv4 + IPv6</span>
+          <span class="tech-badge">AS4809 CN2 GIA + BGP</span>
+          <span class="tech-badge">KVM Full Virtualization</span>
+          <span class="tech-badge">NVMe &gt;3000 MB/s</span>
         </div>
         <h1>LuckVM香港节点(HKG)网络架构、三网延迟基准与NVMe存储I/O技术规范</h1>
         <p class="doc-lead">
-          本文档面向系统管理员、DevOps 工程师与跨境架构师，详细拆解 <a href="https://www.luckvm.com/zh/hk-cloud-server.html" style="color:var(--accent-blue);font-weight:600;">LuckVM 香港云服务器</a> 的底层网络路由拓扑（双向 CN2 GIA 三网直连与 BGP 冗余机制）、NVMe 固态存储阵列 I/O 性能基准、配置价格矩阵及上线前网络核验流程。
+          本文档面向系统管理员与跨境架构师，拆解 <a href="https://www.luckvm.com/zh/hk-cloud-server.html" style="color:var(--accent-blue);font-weight:600;">LuckVM 香港云服务器</a> 的双向 CN2 GIA（AS4809）三网直连架构、70GB NVMe 固态阵列 I/O 基准、配置价格矩阵及上线前终端验证方法。
         </p>
 
         <div class="kpi-grid">
           <div class="kpi-item">
             <span class="kpi-code">&lt; 10 ms</span>
-            <span class="kpi-desc">中国大陆沿海直连延迟</span>
+            <span class="kpi-desc">大陆沿海直连延迟</span>
           </div>
           <div class="kpi-item">
             <span class="kpi-code">5 - 22 ms</span>
-            <span class="kpi-desc">全国三网往返 RTT (丢包 &lt;0.3%)</span>
+            <span class="kpi-desc">全国三网 RTT (丢包&lt;0.3%)</span>
           </div>
           <div class="kpi-item">
             <span class="kpi-code">&gt; 3000 MB/s</span>
-            <span class="kpi-desc">NVMe SSD 顺序读写吞吐</span>
+            <span class="kpi-desc">70GB NVMe 顺序读写</span>
           </div>
           <div class="kpi-item">
             <span class="kpi-code">100% 独享</span>
-            <span class="kpi-desc">不限流量端口 · 晚高峰不限速</span>
+            <span class="kpi-desc">不限流量 · 高峰不限速</span>
           </div>
         </div>
+
+        <!-- 移动端专属折叠目录抽屉（置于H1下方，不遮挡首屏） -->
+        <details class="mobile-toc">
+          <summary>快速跳转技术章节目录 (TOC)</summary>
+          <ul class="toc-list" style="padding: 8px 0;">
+            <li><a href="#routing-architecture">1. AS4809 双向 CN2 GIA 路由对比</a></li>
+            <li><a href="#latency-matrix">2. 中国大陆与亚太延迟矩阵</a></li>
+            <li><a href="#hardware-specs">3. KVM 硬件规格与全周期价格</a></li>
+            <li><a href="#cli-verification">4. 部署前 CLI 网络与 I/O 验证</a></li>
+            <li><a href="#engineering-faq">5. 架构师常见技术问答 (FAQ)</a></li>
+          </ul>
+        </details>
       </header>
 
-      <!-- 第一节：网络路由拓扑 -->
+      <!-- 第一节 -->
       <section id="routing-architecture">
-        <h2>1. 香港机房 AS4809 双向 CN2 GIA 与 CMI / PCCW 路由拓扑对比</h2>
+        <h2>1. 香港机房 AS4809 双向 CN2 GIA 与国际 BGP 路由对比</h2>
         <p>
-          在香港数据中心选型中，单纯的“香港节点”标签并不能代表晚高峰的实际吞吐表现。普通国际 BGP 线路若绕行海外或走高拥塞公共交换节点（如普通 163 骨干网 AS4134），在每日 20:00–23:00 晚高峰时段极易发生队列丢包与延迟抖动。LuckVM 香港节点采用<strong>双向 CN2 GIA（AS4809）三网直连架构</strong>，并结合 BGP 多线自动容灾（涵盖 CMI 与 PCCW 等优质上游比选），实现以下工程特性：
+          LuckVM 香港节点采用<strong>双向 CN2 GIA（AS4809）三网直连架构</strong>，并结合 BGP 多线自动容灾（兼顾 CMI 与 PCCW 路由调优），支持按业务受众选择 2–10Mbps CN2 GIA 优化带宽或 20–100Mbps 国际带宽（最高可升至 1Gbps 专线）：
         </p>
 
         <div class="table-container">
@@ -685,274 +573,212 @@
               <tr>
                 <th>路由方案维度</th>
                 <th>双向 CN2 GIA (AS4809) 优化带宽</th>
-                <th>国际 BGP 多线带宽 (CMI / PCCW / Tier-1)</th>
-                <th>传统普通 163 骨干网 (AS4134)</th>
+                <th>国际 BGP 多线带宽 (CMI / PCCW)</th>
               </tr>
             </thead>
             <tbody>
               <tr class="recommended-row">
-                <td><strong>去回程自治系统路径</strong></td>
-                <td>电信双向 <code class="inline-code">59.43.*.* (AS4809)</code> + 联通/移动直连</td>
-                <td>BGP 智能选路，优先匹配亚太与欧美最近 IX</td>
-                <td>经由普通公共国际出口，晚高峰易拥堵</td>
+                <td data-label="路由方案维度"><strong>去回程自治系统</strong></td>
+                <td data-label="双向 CN2 GIA">电信双向 59.43.*.* (AS4809) + 联通/移动直连</td>
+                <td data-label="国际 BGP 多线">BGP 智能选路，优先匹配亚太与欧美 IX</td>
               </tr>
               <tr class="recommended-row">
-                <td><strong>LuckVM 标配端口规格</strong></td>
-                <td><strong>2 - 10 Mbps 独享</strong>（不限流量，高峰不限速）</td>
-                <td><strong>20 - 100 Mbps 独享</strong>（可升至 100M-1Gbps 专线）</td>
-                <td>通常为共享突发带宽，高峰期限制流速</td>
+                <td data-label="路由方案维度"><strong>标配端口规格</strong></td>
+                <td data-label="双向 CN2 GIA"><strong>2 - 10 Mbps 独享</strong>（不限流量，高峰不限速）</td>
+                <td data-label="国际 BGP 多线"><strong>20 - 100 Mbps 独享</strong>（可升至 1Gbps 专线）</td>
               </tr>
               <tr>
-                <td><strong>晚高峰丢包率基准</strong></td>
-                <td><strong>&lt; 0.3%</strong>（具备独立昂贵冗余队列）</td>
-                <td>亚太与海外方向极低，适合全球化流量分发</td>
-                <td>晚高峰丢包率常升至 5% - 15% 以上</td>
+                <td data-label="路由方案维度"><strong>晚高峰丢包基准</strong></td>
+                <td data-label="双向 CN2 GIA"><strong>&lt; 0.3%</strong>（具备独立高优先级冗余队列）</td>
+                <td data-label="国际 BGP 多线">海外与亚太方向极低，适合全球内容分发</td>
               </tr>
               <tr>
-                <td><strong>典型适用工程负载</strong></td>
-                <td>跨境电商支付网关回调、B2B官网、低延迟 API 后端</td>
-                <td>海外流媒体加速、全球 CDN 分发节点、跨国下载站</td>
-                <td>非实时静态备份或对延迟不敏感的批处理任务</td>
+                <td data-label="路由方案维度"><strong>典型适用负载</strong></td>
+                <td data-label="双向 CN2 GIA">跨境独立站支付回调、B2B官网、低延迟API</td>
+                <td data-label="国际 BGP 多线">海外流媒体加速、全球 CDN 分发、下载站</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <p style="font-size: 13.5px; color: var(--text-secondary);">
-          延伸阅读：如需针对特定运营商进行深度选路比对，请参阅官方技术指南 <a href="https://www.luckvm.com/zh/hong-kong-cn2-cmi-pccw-comparison.html" style="color:var(--accent-blue);">《香港 VPS 线路对比：CN2 GIA、CMI 与 PCCW 路由详解》</a>。
-        </p>
       </section>
 
-      <!-- 第二节：亚太延迟基准 -->
+      <!-- 第二节 -->
       <section id="latency-matrix">
-        <h2>2. 中国大陆及亚太核心城市点对点延迟基准 (Latency Matrix)</h2>
-        <p>
-          相比新加坡（40–60 ms）与日本东京（50–70 ms）节点，香港凭借毗邻中国大陆华南骨干网出口的物理距离优势，提供了全亚太最低的通信往返时间（RTT）。以下为 LuckVM 香港节点与主要对比区域的网络实测基准：
-        </p>
-
+        <h2>2. 中国大陆及亚太核心节点延迟基准 (Latency Matrix)</h2>
         <div class="table-container">
           <table>
             <thead>
               <tr>
-                <th>源端 / 目标测试区域</th>
-                <th>LuckVM 香港 (HKG - CN2 GIA)</th>
-                <th>LuckVM 新加坡 (SIN - CN2)</th>
-                <th>LuckVM 日本东京 (TYO - CN2)</th>
-                <th>LuckVM 美国洛杉矶 (LAX - CN2)</th>
+                <th>测试指标</th>
+                <th>香港 (HKG - CN2 GIA)</th>
+                <th>新加坡 (SIN - CN2)</th>
+                <th>日本东京 (TYO - CN2)</th>
+                <th>美国洛杉矶 (LAX - CN2)</th>
               </tr>
             </thead>
             <tbody>
               <tr class="recommended-row">
-                <td><strong>中国大陆沿海省份 (粤/闽/浙/沪)</strong></td>
-                <td><strong>&lt; 10 ms (5 - 10 ms)</strong></td>
-                <td>35 - 45 ms</td>
-                <td>45 - 55 ms</td>
-                <td>130 - 150 ms</td>
+                <td data-label="测试指标"><strong>大陆沿海延迟</strong></td>
+                <td data-label="香港 CN2 GIA"><strong>&lt; 10 ms (5 - 10 ms)</strong></td>
+                <td data-label="新加坡 CN2">35 - 45 ms</td>
+                <td data-label="日本东京 CN2">45 - 55 ms</td>
+                <td data-label="美国洛杉矶 CN2">130 - 150 ms</td>
               </tr>
               <tr class="recommended-row">
-                <td><strong>中国大陆全国三网平均</strong></td>
-                <td><strong>5 - 22 ms (丢包 &lt;0.3%)</strong></td>
-                <td>40 - 60 ms</td>
-                <td>50 - 70 ms</td>
-                <td>140 - 170 ms</td>
+                <td data-label="测试指标"><strong>全国三网平均</strong></td>
+                <td data-label="香港 CN2 GIA"><strong>5 - 22 ms (丢包&lt;0.3%)</strong></td>
+                <td data-label="新加坡 CN2">40 - 60 ms</td>
+                <td data-label="日本东京 CN2">50 - 70 ms</td>
+                <td data-label="美国洛杉矶 CN2">140 - 170 ms</td>
               </tr>
               <tr>
-                <td><strong>标配独享端口与存储</strong></td>
-                <td>10 Mbps 独享 / 70GB NVMe</td>
-                <td>10 Mbps 独享 / 70GB NVMe</td>
-                <td>10 Mbps 独享 / 70GB NVMe</td>
-                <td>30 Mbps 独享 / 70GB NVMe</td>
+                <td data-label="测试指标"><strong>入门端口与存储</strong></td>
+                <td data-label="香港 CN2 GIA">10M 独享 / 70GB NVMe</td>
+                <td data-label="新加坡 CN2">10M 独享 / 70GB NVMe</td>
+                <td data-label="日本东京 CN2">10M 独享 / 70GB NVMe</td>
+                <td data-label="美国洛杉矶 CN2">30M 独享 / 70GB NVMe</td>
               </tr>
               <tr>
-                <td><strong>入门实例基准起价</strong></td>
-                <td><strong>$8.80 / 月</strong></td>
-                <td>$11.00 / 月</td>
-                <td>$11.00 / 月</td>
-                <td>$8.80 / 月</td>
+                <td data-label="测试指标"><strong>入门月付起价</strong></td>
+                <td data-label="香港 CN2 GIA"><strong>$8.80 / 月</strong></td>
+                <td data-label="新加坡 CN2">$11.00 / 月</td>
+                <td data-label="日本东京 CN2">$11.00 / 月</td>
+                <td data-label="美国洛杉矶 CN2">$8.80 / 月</td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- 第三节：硬件规格与周期价格表 -->
+      <!-- 第三节 -->
       <section id="hardware-specs">
         <h2>3. KVM 虚拟化硬件规格与全周期价格矩阵</h2>
-        <p>
-          LuckVM 香港云服务器全系基于 <strong>KVM 全虚拟化架构</strong>，杜绝容器化虚拟（如 OpenVZ/LXC）的超售与内核限制。所有实例默认挂载读写速度超过 <strong>3000 MB/s 的 NVMe SSD 固态阵列</strong>（由 60 GB 系统盘 + 10 GB 数据盘组成，合计 70 GB），支持在线弹性升级 CPU、内存、磁盘与带宽且数据零丢失。
-        </p>
-
         <div class="table-container">
           <table>
             <thead>
               <tr>
                 <th>套餐型号</th>
-                <th>处理器与内存</th>
-                <th>NVMe 存储容量</th>
-                <th>独享带宽与流量</th>
+                <th>CPU / 内存</th>
+                <th>NVMe 存储</th>
+                <th>独享带宽</th>
                 <th>月付</th>
-                <th>季付 (3个月)</th>
-                <th>半年付 (6个月)</th>
-                <th>年付 (12个月)</th>
-                <th>官方部署入口</th>
+                <th>季付</th>
+                <th>半年付</th>
+                <th>年付</th>
+                <th>部署入口</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>入门款 (Entry)</strong></td>
-                <td>1 vCPU / 1 GB RAM</td>
-                <td>60G + 10G (70GB NVMe)</td>
-                <td>10 Mbps 独享 / 不限流量</td>
-                <td><strong>$8.80</strong></td>
-                <td>$26.40</td>
-                <td>$52.80</td>
-                <td>$105.60</td>
-                <td><a href="https://www.luckvm.com/zh/hk-cloud-server.html" style="color:var(--accent-blue);font-weight:600;">订购实例 →</a></td>
+                <td data-label="套餐型号"><strong>入门款 (Entry)</strong></td>
+                <td data-label="CPU / 内存">1 vCPU / 1 GB</td>
+                <td data-label="NVMe 存储">60G+10G (70GB)</td>
+                <td data-label="独享带宽">10M CN2 不限流</td>
+                <td data-label="月付"><strong>$8.80</strong></td>
+                <td data-label="季付">$26.40</td>
+                <td data-label="半年付">$52.80</td>
+                <td data-label="年付">$105.60</td>
+                <td data-label="部署入口"><a href="https://www.luckvm.com/zh/hk-cloud-server.html" style="color:var(--accent-blue);font-weight:700;">立即订购 →</a></td>
               </tr>
               <tr class="recommended-row">
-                <td><strong>中级款 (Medium)</strong></td>
-                <td>1 vCPU / 2 GB RAM</td>
-                <td>60G + 10G (70GB NVMe)</td>
-                <td>10 Mbps 独享 / 不限流量</td>
-                <td><strong>$14.30</strong></td>
-                <td>$42.90</td>
-                <td>$85.80</td>
-                <td>$171.60</td>
-                <td><a href="https://www.luckvm.com/zh/hk-cloud-server.html" style="color:var(--accent-blue);font-weight:600;">订购实例 →</a></td>
+                <td data-label="套餐型号"><strong>中级款 (Medium)</strong></td>
+                <td data-label="CPU / 内存">1 vCPU / 2 GB</td>
+                <td data-label="NVMe 存储">60G+10G (70GB)</td>
+                <td data-label="独享带宽">10M CN2 不限流</td>
+                <td data-label="月付"><strong>$14.30</strong></td>
+                <td data-label="季付">$42.90</td>
+                <td data-label="半年付">$85.80</td>
+                <td data-label="年付">$171.60</td>
+                <td data-label="部署入口"><a href="https://www.luckvm.com/zh/hk-cloud-server.html" style="color:var(--accent-blue);font-weight:700;">立即订购 →</a></td>
               </tr>
               <tr>
-                <td><strong>高级款 (Advanced)</strong></td>
-                <td>2 vCPU / 2 GB RAM</td>
-                <td>60G + 10G (70GB NVMe)</td>
-                <td>10 Mbps 独享 / 不限流量</td>
-                <td><strong>$17.60</strong></td>
-                <td>$52.80</td>
-                <td>$105.60</td>
-                <td>$211.20</td>
-                <td><a href="https://www.luckvm.com/zh/hk-cloud-server.html" style="color:var(--accent-blue);font-weight:600;">订购实例 →</a></td>
+                <td data-label="套餐型号"><strong>高级款 (Advanced)</strong></td>
+                <td data-label="CPU / 内存">2 vCPU / 2 GB</td>
+                <td data-label="NVMe 存储">60G+10G (70GB)</td>
+                <td data-label="独享带宽">10M CN2 不限流</td>
+                <td data-label="月付"><strong>$17.60</strong></td>
+                <td data-label="季付">$52.80</td>
+                <td data-label="半年付">$105.60</td>
+                <td data-label="年付">$211.20</td>
+                <td data-label="部署入口"><a href="https://www.luckvm.com/zh/hk-cloud-server.html" style="color:var(--accent-blue);font-weight:700;">立即订购 →</a></td>
               </tr>
             </tbody>
           </table>
         </div>
-        <p style="font-size: 13.5px; color: var(--text-secondary);">
-          容量规划参考：若业务涉及高并发 MySQL/PostgreSQL 数据库或需要更高物理核数，可查阅 <a href="https://www.luckvm.com/zh/hong-kong-vps-sizing-guide.html" style="color:var(--accent-blue);">《香港 VPS 配置选型指南》</a>，或直接升级至 <a href="https://www.luckvm.com/zh/physical-server-purchase.html" style="color:var(--accent-blue);">香港双路 Xeon E5-2683 v4 独立物理服务器（32核 / 64GB DDR4 ECC / 1TB SSD RAID1，$286.00/月起）</a>。
-        </p>
       </section>
 
-      <!-- 第四节：CLI网络与I/O验证指南 -->
+      <!-- 第四节 -->
       <section id="cli-verification">
         <h2>4. 生产环境部署前验证清单与终端基准测试指南</h2>
         <p>
-          遵循工程最佳实践，面向跨境电商、支付回调与亚太业务上线前，建议先通过 <a href="https://www.luckvm.com/zh/looking-glass.html?region=hk" style="color:var(--accent-blue);font-weight:600;">LuckVM 香港 Looking Glass 测速工具</a> 验证去回程路由，并在实例开通（付款后 1–5 分钟自动交付）后使用以下标准命令核验基础设施指标：
+          上线前可通过 <a href="https://www.luckvm.com/zh/looking-glass.html?region=hk" style="color:var(--accent-blue);font-weight:600;">LuckVM 香港 Looking Glass 测速工具</a> 验证路由，并在实例交付后通过以下命令核验性能：
         </p>
 
         <div class="code-block">
-<span class="code-comment"># 1. 验证回程路由是否经过中国电信 CN2 GIA (AS4809 / 59.43.*.* 核心节点)</span>
-mtr -r -c 50 -n &lt;您的目标客户端公网IP&gt;
+<span class="code-comment"># 1. 验证回程路由是否经过 AS4809 (59.43.*.*) 核心节点</span>
+mtr -r -c 50 -n &lt;目标客户端公网IP&gt;
 
-<span class="code-comment"># 2. 测量 70GB NVMe SSD 磁盘阵列的真实顺序读取与随机 IOPS 表现</span>
-fio --name=nvme_seq_read --rw=read --bs=1M --size=2G --numjobs=1 --ioengine=libaio --direct=1 --group_reporting
-
-<span class="code-comment"># 3. 检查双栈网络接口 (独立 IPv4 + IPv6) 与内核 TCP BBR 拥塞控制状态</span>
-ip addr show &amp;&amp; sysctl net.ipv4.tcp_congestion_control
+<span class="code-comment"># 2. 测量 70GB NVMe SSD 顺序读取吞吐 (&gt;3000 MB/s)</span>
+fio --name=seq_read --rw=read --bs=1M --size=2G --numjobs=1 --ioengine=libaio --direct=1 --group_reporting
         </div>
 
         <div class="checklist-grid">
           <div class="check-card">
-            <h3>① 从实际用户网络验证线路</h3>
-            <p>在香港部署前，从实际目标用户所在的电信、联通、移动运营商网络测试延迟、丢包与服务端口。线路名称不能代替去程、回程及晚高峰实测记录。</p>
+            <h3>① 从用户网络验证线路</h3>
+            <p>从实际用户所在的电信、联通、移动网络测试去回程延迟、晚高峰丢包与服务端口连通性。</p>
           </div>
           <div class="check-card">
-            <h3>② 按数据库与日志负载核对存储</h3>
-            <p>核对实际磁盘类型（NVMe >3000MB/s）、70GB 容量与在线扩容条件，用真实数据库负载测量 I/O 表现，并预留快照备份及系统日志所需空间。</p>
+            <h3>② 按数据库负载测量存储</h3>
+            <p>核对 70GB NVMe 容量与在线扩容条件，用真实业务负载测量 I/O 表现并预留快照空间。</p>
           </div>
           <div class="check-card">
-            <h3>③ 明确 SLA 可用性与容灾恢复目标</h3>
-            <p>核对云服务器的 99.9% 适用 SLA、维护通知与补偿流程；利用自研面板的快照（Snapshot）与一键恢复功能，为关键应用设计独立备份方案。</p>
+            <h3>③ 明确 SLA 与快照恢复</h3>
+            <p>核对 99.9% SLA 保障，利用自研面板的快照备份（Snapshot）与 VNC 控制台构建容灾方案。</p>
           </div>
         </div>
       </section>
 
-      <!-- 第五节：系统环境与运维规范 -->
-      <section id="os-environment">
-        <h2>5. 操作系统镜像矩阵、DDoS 防护与控制面板规范</h2>
-        <div class="table-container">
-          <table>
-            <tbody>
-              <tr>
-                <th style="width: 220px;">免费 Linux 发行版</th>
-                <td>Ubuntu (20.04 / 22.04)、CentOS (7 / 8)、Debian (10 / 11)、Rocky Linux、AlmaLinux、Fedora、openEuler、TencentOS</td>
-              </tr>
-              <tr>
-                <th>Windows Server 支持</th>
-                <td>支持 Windows Server 2019 / 2022（正版授权附加费约 $8–$15 / 月）</td>
-              </tr>
-              <tr>
-                <th>自定义镜像与重装</th>
-                <td>支持用户上传自定义 ISO 镜像挂载安装，支持 Web 控制面板一键重装或切换操作系统</td>
-              </tr>
-              <tr>
-                <th>控制面板与带外急救</th>
-                <td>自研 Web 管理面板，提供在线重启、关机、实时流量监控及 <strong>VNC 远程控制台</strong>（网络阻断时依然可直连修复系统）</td>
-              </tr>
-              <tr>
-                <th>网络安全与 DDoS 防护</th>
-                <td>默认自带基础 DDoS 流量清洗，支持自定义清洗阈值、访问控制策略与安全告警通知</td>
-              </tr>
-              <tr>
-                <th>交付时效与支付渠道</th>
-                <td>付款后 <strong>1–5 分钟自动开通</strong>并发送凭证至邮箱；支持支付宝 (Alipay)、USDT、信用卡/借记卡、Google Pay 及对公转账</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- 第六节：FAQ -->
+      <!-- 第五节 -->
       <section id="engineering-faq">
-        <h2>6. 架构师与运维常见技术问答 (Engineering FAQ)</h2>
-        
-        <h3>Q1：香港云服务器的 10Mbps CN2 GIA 带宽是独享还是共享？能否支撑突发大流量？</h3>
-        <p>
-          LuckVM 提供的带宽为 <strong>100% 独享带宽</strong>，不与宿主机上的其他租户共享带宽池。所有套餐均<strong>不限月度流量，且晚高峰绝不限速</strong>。若业务偏向全球大带宽内容分发（如视频流媒体或大文件下载），可选择 20–100Mbps 国际带宽方案，或通过工单平滑升级至 100Mbps–1Gbps BGP 多线独享专线。
-        </p>
+        <h2>5. 架构师常见技术问答 (Engineering FAQ)</h2>
+        <h3>Q1：系统支持哪些 Linux 与 Windows 镜像？</h3>
+        <p>免费提供 Ubuntu (20.04/22.04)、CentOS (7/8)、Debian (10/11)、Rocky Linux、AlmaLinux、Fedora、openEuler 与 TencentOS；支持 Windows Server 2019/2022（授权附加费约 $8–$15/月）及自定义 ISO 挂载。</p>
 
-        <h3>Q2：面向中国大陆及亚太客户部署网站，是否需要办理 ICP 备案？</h3>
-        <p>
-          香港特别行政区数据中心属于海外及港澳台免备案节点，<strong>无需办理中国大陆 ICP 域名备案</strong>。购买后 1–5 分钟内即可直接绑定域名上线运行，非常适合 Shopify/WooCommerce 跨境独立站、外贸 B2B 官网与敏捷开发测试环境。
-        </p>
-
-        <h3>Q3：如何通过工单高效获取技术支持与远程协助？</h3>
-        <p>
-          LuckVM 提供 7×24 小时中文技术支持。提交工单时，建议附上<strong>产品编号、问题发生时间戳以及 MTR/日志诊断记录</strong>，以便工程师快速确认基础设施、系统或网络层面的支持范围；如需深度远程协助或跨机房业务迁移，亦可直接通过工单核对方案。
-        </p>
+        <h3>Q2：付款后多久开通？支持哪些结算通道？</h3>
+        <p>免备案即买即用，支付后 <strong>1–5 分钟内自动开通</strong>并发送凭证至邮箱。支持支付宝 (Alipay)、USDT、信用卡/借记卡、Google Pay 与对公转账。</p>
       </section>
 
-      <!-- 底部行动号召横幅 -->
       <div class="action-banner">
         <div>
-          <div style="font-size: 16px; font-weight: 700; color: var(--text-primary);">立即部署 LuckVM 香港 AS4809 双向 CN2 GIA 云服务器</div>
-          <div style="font-size: 13.5px; color: var(--text-secondary);">免备案 1 分钟级自动交付 · 70GB NVMe 固态阵列 · $8.80/月起享独享不限流量</div>
+          <div style="font-size: 16px; font-weight: 700;">立即部署 LuckVM 香港 AS4809 双向 CN2 GIA 云服务器</div>
+          <div style="font-size: 13px; color: var(--text-secondary);">免备案 1 分钟自动交付 · 70GB NVMe 阵列 · $8.80/月起享独享不限流量</div>
         </div>
         <div class="btn-group">
-          <a href="https://www.luckvm.com/zh/hk-cloud-server.html" class="btn-solid">前往 LuckVM 官网立即订购</a>
-          <a href="https://www.luckvm.com/zh/looking-glass.html?region=hk" class="btn-outline">打开香港 Looking Glass 测速</a>
+          <a href="https://www.luckvm.com/zh/hk-cloud-server.html" class="btn-solid">前往官网立即订购</a>
+          <a href="https://www.luckvm.com/zh/looking-glass.html?region=hk" class="btn-outline">Looking Glass 测速</a>
         </div>
       </div>
-
     </main>
   </div>
 
   <footer class="doc-footer">
-    <div>© 2026 LuckVM Cloud Infrastructure Documentation. All rights reserved.</div>
+    <div>© 2026 LuckVM Cloud Infrastructure Documentation.</div>
     <div>
-      关联节点规范：
-      <a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港 CN2 GIA</a> ·
-      <a href="https://www.luckvm.com/zh/us-cloud-server.html">美国洛杉矶 CN2 ($8.80/月)</a> ·
-      <a href="https://www.luckvm.com/zh/jp-cloud-server.html">日本东京 CN2 ($11/月)</a> ·
-      <a href="https://www.luckvm.com/zh/sg-cloud-server.html">新加坡 CN2 ($11/月)</a> ·
-      <a href="https://www.luckvm.com/zh/tw-cloud-server.html">中国台湾 CN2 ($11/月)</a>
+      关联节点：<a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港 CN2 GIA</a> ·
+      <a href="https://www.luckvm.com/zh/us-cloud-server.html">美国 CN2-30M ($8.80/月)</a> ·
+      <a href="https://www.luckvm.com/zh/jp-cloud-server.html">日本 CN2 ($11/月)</a> ·
+      <a href="https://www.luckvm.com/zh/sg-cloud-server.html">新加坡 CN2 ($11/月)</a>
     </div>
   </footer>
+
+  <!-- 手机端专属底部固定转化栏 -->
+  <div class="mobile-sticky-bar">
+    <div>
+      <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">香港 CN2 GIA 云服务器</div>
+      <div style="font-size: 12px; color: var(--accent-blue); font-weight: 600;">$8.80/月起 · 70GB NVMe · 免备案</div>
+    </div>
+    <a href="https://www.luckvm.com/zh/hk-cloud-server.html" class="btn-solid" style="min-height: 40px; padding: 8px 16px; font-size: 13.5px;">立即选购 →</a>
+  </div>
 
 </body>
 </html>
