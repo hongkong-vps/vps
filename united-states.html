@@ -2,23 +2,18 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 
-  <!-- 1. 针对开发者与北美架构选型的 SEO Title 与 Description -->
   <title>美国洛杉矶/硅谷CN2-30M云服务器网络架构与北美物理机/GPU算力规范-LuckVM</title>
   <meta name="description" content="LuckVM美国西海岸数据中心（洛杉矶LAX/硅谷SJC）技术规范文档：详解美西30Mbps独享CN2直连与BGP路由拓扑、70GB NVMe (>3000MB/s) 存储基准，以及从$8.80/月KVM云实例到硅谷Xeon E3物理机($88/月)与RTX 4090 GPU($1.2/h)的架构演进。">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 
-  <!-- 2. 规范网址 Canonical（强制带尾部斜杠） -->
   <link rel="canonical" href="https://luckvm-cloud.github.io/zh/vps/united-states/">
-
-  <!-- 3. 多语言 Hreflang 双向互指簇 -->
   <link rel="alternate" hreflang="zh-CN" href="https://luckvm-cloud.github.io/zh/vps/united-states/">
   <link rel="alternate" hreflang="zh-TW" href="https://luckvm-cloud.github.io/tw/vps/united-states/">
   <link rel="alternate" hreflang="en" href="https://luckvm-cloud.github.io/en/vps/united-states/">
   <link rel="alternate" hreflang="x-default" href="https://luckvm-cloud.github.io/en/vps/united-states/">
 
-  <!-- 4. Open Graph 元数据 -->
   <meta property="og:type" content="article">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:site_name" content="LuckVM Infrastructure & Network Docs">
@@ -27,7 +22,6 @@
   <meta property="og:url" content="https://luckvm-cloud.github.io/zh/vps/united-states/">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- 5. Schema.org 结构化数据 (TechArticle + Product + FAQPage) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -39,37 +33,17 @@
         "inLanguage": "zh-CN",
         "datePublished": "2026-10-13",
         "dateModified": "2026-10-23",
-        "author": {
-          "@type": "Organization",
-          "name": "LuckVM Cloud Infrastructure Team",
-          "url": "https://www.luckvm.com/zh/index.html"
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": "LuckVM",
-          "url": "https://www.luckvm.com/zh/index.html"
-        },
-        "mainEntityOfPage": {
-          "@type": "WebPage",
-          "@id": "https://luckvm-cloud.github.io/zh/vps/united-states/"
-        }
+        "author": { "@type": "Organization", "name": "LuckVM Cloud Infrastructure Team", "url": "https://www.luckvm.com/zh/index.html" },
+        "publisher": { "@type": "Organization", "name": "LuckVM", "url": "https://www.luckvm.com/zh/index.html" },
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "https://luckvm-cloud.github.io/zh/vps/united-states/" }
       },
       {
         "@type": "Product",
         "name": "LuckVM 美国云服务器 (Los Angeles / Silicon Valley CN2-30M VPS)",
-        "brand": {
-          "@type": "Brand",
-          "name": "LuckVM"
-        },
+        "brand": { "@type": "Brand", "name": "LuckVM" },
         "description": "美国西海岸（洛杉矶/硅谷）KVM全虚拟化云服务器，搭载30Mbps独享CN2直连与BGP多线网络，标配70GB NVMe SSD固态阵列（读写>3000MB/s）、独立IPv4/IPv6及DDoS防护。",
         "url": "https://www.luckvm.com/zh/us-cloud-server.html",
         "category": "Infrastructure as a Service (IaaS) / Cloud VPS",
-        "additionalProperty": [
-          { "@type": "PropertyValue", "name": "可用区节点", "value": "美国洛杉矶 (LAX) / 美国硅谷 (SJC)" },
-          { "@type": "PropertyValue", "name": "核心网络配置", "value": "30 Mbps 独享 CN2 直连 + 国际 BGP 多线 (不限流量)" },
-          { "@type": "PropertyValue", "name": "存储阵列规格", "value": "70 GB NVMe SSD (60GB + 10GB, >3000 MB/s)" },
-          { "@type": "PropertyValue", "name": "虚拟化架构", "value": "KVM 全虚拟化，支持无损弹性扩容" }
-        ],
         "offers": {
           "@type": "AggregateOffer",
           "priceCurrency": "USD",
@@ -77,45 +51,10 @@
           "highPrice": "88.00",
           "offerCount": "2",
           "offers": [
-            {
-              "@type": "Offer",
-              "name": "美国 CN2-30M 云服务器入门款 (1 vCPU / 1GB RAM / 70GB NVMe / 30Mbps)",
-              "price": "8.80",
-              "priceCurrency": "USD",
-              "availability": "https://schema.org/InStock",
-              "url": "https://www.luckvm.com/zh/us-cloud-server.html"
-            },
-            {
-              "@type": "Offer",
-              "name": "美国硅谷入门独立物理服务器 (Xeon E3-1230 v3 / 32GB DDR4 / 1TB HDD / 30M-100M独享)",
-              "price": "88.00",
-              "priceCurrency": "USD",
-              "availability": "https://schema.org/InStock",
-              "url": "https://www.luckvm.com/zh/physical-server-purchase.html"
-            }
+            { "@type": "Offer", "name": "美国 CN2-30M 云服务器入门款 (1C/1G/70G NVMe/30Mbps)", "price": "8.80", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.luckvm.com/zh/us-cloud-server.html" },
+            { "@type": "Offer", "name": "美国硅谷入门独立物理机 (Xeon E3-1230 v3 / 32GB DDR4 / 1TB HDD)", "price": "88.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.luckvm.com/zh/physical-server-purchase.html" }
           ]
         }
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "美国30Mbps独享不限流量端口每月理论最大可承载多少数据传输量？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "在100%独享且晚高峰不限速的条件下，30Mbps端口理论持续每秒传输速率约为3.75 MB/s，单向24小时满载可传输约324 GB数据，月度单向理论满载吞吐量接近9.7 TB。这使其非常适合承载WordPress独立站图片分发、私有文件同步及高并发Web API。"
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "美国洛杉矶与硅谷节点在算力资源形态上有哪些扩展选项？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "除$8.80/月起的弹性KVM云服务器外，美国节点同步提供洛杉矶NVIDIA RTX 4090 GPU实例（24GB显存，预装CUDA/PyTorch，$1.20/小时起）用于大模型微调与推理，以及硅谷Intel Xeon E3-1230 v3独立物理服务器（32GB DDR4，10Gbps DDoS防护，自带IPMI管理，$88.00/月起）。"
-            }
-          }
-        ]
       }
     ]
   }
@@ -137,11 +76,7 @@
       --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     body {
       font-family: var(--font-sans);
@@ -149,12 +84,13 @@
       color: var(--text-primary);
       line-height: 1.65;
       font-size: 15px;
+      overflow-x: hidden;
     }
 
     .topbar {
       background-color: #24292f;
       color: #ffffff;
-      padding: 12px 24px;
+      padding: 10px 16px;
       border-bottom: 1px solid #30363d;
       position: sticky;
       top: 0;
@@ -168,12 +104,12 @@
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand-title {
       font-weight: 700;
-      font-size: 16px;
+      font-size: 15.5px;
       color: #ffffff;
       text-decoration: none;
       display: flex;
@@ -192,82 +128,58 @@
 
     .top-nav {
       display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      font-size: 13.5px;
+      gap: 14px;
+      font-size: 13px;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
     }
 
-    .top-nav a {
-      color: #e6edf3;
-      text-decoration: none;
-    }
-
-    .top-nav a:hover {
-      color: #58a6ff;
-      text-decoration: underline;
-    }
+    .top-nav a { color: #e6edf3; text-decoration: none; min-height: 36px; display: inline-flex; align-items: center; }
 
     .layout-wrapper {
       max-width: 1180px;
       margin: 24px auto;
-      padding: 0 20px;
+      padding: 0 16px;
       display: grid;
       grid-template-columns: 250px 1fr;
-      gap: 28px;
+      gap: 24px;
       align-items: start;
-    }
-
-    @media (max-width: 900px) {
-      .layout-wrapper {
-        grid-template-columns: 1fr;
-      }
-      .sidebar {
-        position: static !important;
-      }
     }
 
     .sidebar {
       position: sticky;
-      top: 72px;
+      top: 68px;
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 18px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
     .sidebar-title {
       font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
       color: var(--text-secondary);
       border-bottom: 1px solid var(--border-color);
       padding-bottom: 8px;
     }
 
-    .toc-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-size: 13.5px;
-    }
-
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 13.5px; }
     .toc-list a {
       color: var(--text-secondary);
       text-decoration: none;
-      display: block;
-      padding: 4px 6px;
-      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 4px 8px;
+      border-radius: 6px;
     }
-
-    .toc-list a:hover {
-      background: var(--bg-body);
-      color: var(--accent-blue);
-    }
+    .toc-list a:hover { background: var(--bg-body); color: var(--accent-blue); }
 
     .sidebar-cta {
       background: #f0f6fc;
@@ -284,554 +196,467 @@
       color: #ffffff;
       text-decoration: none;
       text-align: center;
+      min-height: 42px;
       padding: 8px 12px;
       border-radius: 6px;
       font-weight: 600;
       font-size: 13px;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .sidebar-cta-btn:hover {
-      background: var(--accent-blue-hover);
+    .mobile-toc {
+      display: none;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px 14px;
     }
+
+    .mobile-toc summary {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--accent-blue);
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .mobile-toc summary::-webkit-details-marker { display: none; }
+    .mobile-toc summary::after { content: "▼ 展开章节"; font-size: 12px; }
+    .mobile-toc[open] summary::after { content: "▲ 收起"; }
 
     .doc-main {
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 32px;
+      padding: 28px;
       display: flex;
       flex-direction: column;
-      gap: 32px;
+      gap: 28px;
+      min-width: 0;
     }
 
-    @media (max-width: 600px) {
-      .doc-main {
-        padding: 20px 16px;
-      }
-    }
+    .breadcrumb { font-size: 12.5px; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .breadcrumb a { color: var(--accent-blue); text-decoration: none; }
 
-    .breadcrumb {
-      font-size: 13px;
-      color: var(--text-secondary);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .breadcrumb a {
-      color: var(--accent-blue);
-      text-decoration: none;
-    }
-
-    .doc-header {
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .tech-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
+    .doc-header { border-bottom: 1px solid var(--border-color); padding-bottom: 20px; display: flex; flex-direction: column; gap: 14px; }
+    .tech-badges { display: flex; flex-wrap: wrap; gap: 6px; }
     .tech-badge {
       background: var(--badge-bg);
       color: var(--badge-text);
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
-      padding: 3px 10px;
+      padding: 3px 9px;
       border-radius: 999px;
       border: 1px solid #b6e3ff;
     }
 
-    h1 {
-      font-size: clamp(22px, 3vw, 30px);
-      font-weight: 700;
-      line-height: 1.3;
-      color: var(--text-primary);
-    }
-
-    .doc-lead {
-      font-size: 15.5px;
-      color: var(--text-secondary);
-    }
+    h1 { font-size: clamp(20px, 4vw, 28px); font-weight: 700; line-height: 1.3; }
+    .doc-lead { font-size: 14.5px; color: var(--text-secondary); }
 
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
       background: var(--bg-body);
-      padding: 16px;
+      padding: 14px;
       border-radius: 8px;
       border: 1px solid var(--border-color);
     }
 
-    .kpi-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
+    .kpi-item { display: flex; flex-direction: column; gap: 2px; }
+    .kpi-code { font-family: var(--font-mono); font-size: clamp(16px, 2.5vw, 20px); font-weight: 700; color: var(--accent-blue); }
+    .kpi-desc { font-size: 12px; color: var(--text-secondary); }
 
-    .kpi-code {
-      font-family: var(--font-mono);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--accent-blue);
-    }
+    section { display: flex; flex-direction: column; gap: 14px; }
+    h2 { font-size: clamp(17px, 3vw, 20px); font-weight: 700; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+    h3 { font-size: 15.5px; font-weight: 700; margin-top: 4px; }
 
-    .kpi-desc {
-      font-size: 12.5px;
-      color: var(--text-secondary);
-    }
-
-    section {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    h2 {
-      font-size: 20px;
-      font-weight: 700;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border-color);
-      color: var(--text-primary);
-    }
-
-    h3 {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-top: 4px;
-    }
-
-    .table-container {
-      width: 100%;
-      overflow-x: auto;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13.5px;
-      text-align: left;
-    }
-
-    th {
-      background: var(--bg-body);
-      font-weight: 700;
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border-color);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    tr.recommended-row {
-      background-color: #f0f6fc;
-    }
+    .table-container { width: 100%; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+    th { background: var(--bg-body); font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+    tr:last-child td { border-bottom: none; }
+    tr.recommended-row td { background-color: #f0f6fc; }
 
     .code-block {
       background: var(--bg-code);
       color: #e6edf3;
       border-radius: 8px;
-      padding: 16px;
+      padding: 14px;
       font-family: var(--font-mono);
-      font-size: 13px;
+      font-size: 12.5px;
       line-height: 1.55;
+      max-width: 100%;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
-    .code-comment {
-      color: #8b949e;
-    }
+    .code-comment { color: #8b949e; }
 
-    .checklist-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
-    }
-
-    .check-card {
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 16px;
-      background: var(--bg-body);
-    }
-
-    .check-card h3 {
-      font-size: 15px;
-      margin-bottom: 6px;
-      color: var(--accent-blue);
-    }
-
-    .check-card p {
-      font-size: 13.5px;
-      color: var(--text-secondary);
-    }
+    .checklist-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .check-card { border: 1px solid var(--border-color); border-radius: 6px; padding: 14px; background: var(--bg-body); }
+    .check-card h3 { font-size: 14.5px; margin-bottom: 6px; color: var(--accent-blue); }
+    .check-card p { font-size: 13px; color: var(--text-secondary); }
 
     .action-banner {
       background: #f0f6fc;
       border: 1px solid #b6e3ff;
       border-radius: 8px;
-      padding: 20px 24px;
+      padding: 18px 20px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
-    .btn-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .btn-solid {
-      background: var(--accent-blue);
-      color: #ffffff;
-      text-decoration: none;
+    .btn-group { display: flex; flex-wrap: wrap; gap: 10px; }
+    .btn-solid, .btn-outline {
+      min-height: 44px;
       padding: 10px 18px;
       border-radius: 6px;
       font-weight: 600;
       font-size: 14px;
-    }
-
-    .btn-solid:hover {
-      background: var(--accent-blue-hover);
-    }
-
-    .btn-outline {
-      background: #ffffff;
-      color: var(--accent-blue);
-      border: 1px solid var(--accent-blue);
       text-decoration: none;
-      padding: 10px 16px;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
+    .btn-solid { background: var(--accent-blue); color: #ffffff; }
+    .btn-outline { background: #ffffff; color: var(--accent-blue); border: 1px solid var(--accent-blue); }
 
     .doc-footer {
       max-width: 1180px;
       margin: 20px auto 40px;
-      padding: 0 20px;
-      font-size: 13px;
+      padding: 0 16px;
+      font-size: 12.5px;
       color: var(--text-secondary);
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
+    }
+    .doc-footer a { color: var(--accent-blue); text-decoration: none; }
+
+    .mobile-sticky-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      padding: 10px 14px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+      z-index: 200;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
     }
 
-    .doc-footer a {
-      color: var(--accent-blue);
-      text-decoration: none;
+    @media (max-width: 900px) {
+      .layout-wrapper { grid-template-columns: 1fr; margin: 12px auto; }
+      .sidebar { display: none; }
+      .mobile-toc { display: block; }
+      .checklist-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      body { padding-bottom: 72px; }
+      .doc-main { padding: 18px 14px; gap: 22px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+      .table-container { border: none; background: transparent; }
+      table, thead, tbody, th, td, tr { display: block; width: 100%; }
+      thead tr { position: absolute; top: -9999px; left: -9999px; }
+      tbody tr {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 12px;
+        background: #ffffff;
+        overflow: hidden;
+      }
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        text-align: right;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--text-primary);
+        text-align: left;
+        flex-shrink: 0;
+      }
+
+      .action-banner { flex-direction: column; align-items: stretch; }
+      .btn-group { flex-direction: column; width: 100%; }
+      .btn-solid, .btn-outline { width: 100%; }
+      .mobile-sticky-bar { display: flex; }
     }
   </style>
 </head>
 <body>
 
-  <!-- 顶部导航 -->
   <header class="topbar">
     <div class="topbar-inner">
       <a href="https://www.luckvm.com/zh/index.html" class="brand-title">
-        <span>LuckVM Cloud Docs</span>
-        <span class="brand-tag">US-LAX / US-SJC</span>
+        <span>LuckVM Docs</span>
+        <span class="brand-tag">US-LAX / SJC</span>
       </a>
       <nav class="top-nav" aria-label="全球节点技术文档导航">
-        <a href="https://www.luckvm.com/zh/us-cloud-server.html">美国云服务器主页</a>
-        <a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港 CN2 GIA 节点</a>
-        <a href="https://www.luckvm.com/zh/physical-server-purchase.html">硅谷独立物理服务器</a>
-        <a href="https://www.luckvm.com/zh/gpu-server-purchase.html">洛杉矶 AI GPU 算力</a>
+        <a href="https://www.luckvm.com/zh/us-cloud-server.html">美国云服务器</a>
+        <a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港 CN2 GIA</a>
+        <a href="https://www.luckvm.com/zh/physical-server-purchase.html">硅谷独立物理机</a>
+        <a href="https://www.luckvm.com/zh/gpu-server-purchase.html">洛杉矶 GPU</a>
         <a href="https://www.luckvm.com/zh/bare-metal-server.html">裸金属宿主机</a>
       </nav>
     </div>
   </header>
 
   <div class="layout-wrapper">
-    <!-- 左侧固定章节索引 -->
-    <aside class="sidebar" aria-label="文档目录">
+    <aside class="sidebar" aria-label="桌面端文档目录">
       <div class="sidebar-title">技术文档目录 (TOC)</div>
       <ul class="toc-list">
-        <li><a href="#us-network-topology">1. 美西跨太平洋 CN2 与 BGP 拓扑</a></li>
-        <li><a href="#bandwidth-sizing">2. 30Mbps 独享端口吞吐量工程测算</a></li>
-        <li><a href="#us-compute-matrix">3. 北美全栈算力配置与价格矩阵</a></li>
-        <li><a href="#cli-benchmark">4. 部署前路由与 NVMe I/O 验证</a></li>
+        <li><a href="#us-network-topology">1. 美西跨太平洋 CN2 拓扑</a></li>
+        <li><a href="#bandwidth-sizing">2. 30Mbps 端口吞吐量测算</a></li>
+        <li><a href="#us-compute-matrix">3. 北美全栈算力与价格矩阵</a></li>
+        <li><a href="#cli-benchmark">4. 部署前路由与 I/O 验证</a></li>
         <li><a href="#us-faq">5. 架构选型常见问题 (FAQ)</a></li>
       </ul>
-
       <div class="sidebar-cta">
-        <div style="font-size: 13px; font-weight: 700; color: var(--text-primary);">美国 CN2-30M 实例交付</div>
-        <div style="font-size: 12px; color: var(--text-secondary);">1核1G / 70GB NVMe / 30Mbps独享不限流量，$8.80/月起，1分钟自动开通。</div>
+        <div style="font-size: 13px; font-weight: 700;">美国 CN2-30M 实例交付</div>
+        <div style="font-size: 12px; color: var(--text-secondary);">1核1G / 70GB NVMe / 30Mbps独享不限流量，$8.80/月起。</div>
         <a href="https://www.luckvm.com/zh/us-cloud-server.html" class="sidebar-cta-btn">前往官网查看实时库存 →</a>
       </div>
     </aside>
 
-    <!-- 右侧核心技术文档区 -->
     <main class="doc-main">
       <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="https://www.luckvm.com/zh/index.html">LuckVM 基础设施文档</a>
+        <a href="https://www.luckvm.com/zh/index.html">LuckVM 文档中心</a>
         <span>/</span>
-        <a href="https://www.luckvm.com/zh/cloud-server-purchase.html">全球云服务器 (VPS)</a>
+        <a href="https://www.luckvm.com/zh/cloud-server-purchase.html">云服务器 (VPS)</a>
         <span>/</span>
         <span>美国西海岸节点 (LAX / SJC)</span>
       </nav>
 
-      <!-- H1 主标题区 -->
       <header class="doc-header">
         <div class="tech-badges">
-          <span class="tech-badge">Zones: Los Angeles (LAX) &amp; Silicon Valley (SJC)</span>
-          <span class="tech-badge">Port: 30 Mbps Dedicated CN2 + BGP</span>
-          <span class="tech-badge">Storage: 70GB NVMe SSD (&gt;3000 MB/s)</span>
-          <span class="tech-badge">Virtualization: KVM Full Isolation</span>
+          <span class="tech-badge">Zones: LAX &amp; SJC</span>
+          <span class="tech-badge">30 Mbps Dedicated CN2</span>
+          <span class="tech-badge">70GB NVMe (&gt;3000 MB/s)</span>
         </div>
         <h1>LuckVM美国节点(LAX/SJC)跨太平洋CN2路由架构、30Mbps吞吐基准与算力选型规范</h1>
         <p class="doc-lead">
-          本文档面向系统架构师、跨境独立站技术负责人与 AI 工程团队，深度解析 <a href="https://www.luckvm.com/zh/us-cloud-server.html" style="color:var(--accent-blue);font-weight:600;">LuckVM 美国云服务器（洛杉矶与硅谷可用区）</a> 的跨太平洋直连海缆与北美本地 BGP 对等互联架构、30Mbps 独享不限流量带宽的吞吐承载边界，以及从轻量 KVM 实例向硅谷独立物理机（$88/月）与洛杉矶 RTX 4090 GPU 算力（$1.20/小时）演进的技术路径。
+          本文档面向系统架构师与跨境独立站技术负责人，解析 <a href="https://www.luckvm.com/zh/us-cloud-server.html" style="color:var(--accent-blue);font-weight:600;">LuckVM 美国云服务器（洛杉矶与硅谷可用区）</a> 的跨太平洋直连海缆与北美本地 BGP 互联架构、30Mbps 独享不限流量端口的承载边界，以及向硅谷独立物理机（$88/月）与洛杉矶 RTX 4090 GPU（$1.20/小时）演进的技术路径。
         </p>
 
         <div class="kpi-grid">
           <div class="kpi-item">
             <span class="kpi-code">30 Mbps</span>
-            <span class="kpi-desc">100% 独享 CN2 端口 (不限流量)</span>
+            <span class="kpi-desc">独享 CN2 端口 (不限流量)</span>
           </div>
           <div class="kpi-item">
             <span class="kpi-code">70 GB NVMe</span>
-            <span class="kpi-desc">60G+10G 阵列 (&gt;3000 MB/s)</span>
+            <span class="kpi-desc">60G+10G (&gt;3000 MB/s)</span>
           </div>
           <div class="kpi-item">
             <span class="kpi-code">$8.80 / 月</span>
-            <span class="kpi-desc">入门基准起价 (同价位3倍带宽)</span>
+            <span class="kpi-desc">入门起价 (3倍端口带宽)</span>
           </div>
           <div class="kpi-item">
             <span class="kpi-code">1 - 5 Min</span>
-            <span class="kpi-desc">免备案自动化实例交付时效</span>
+            <span class="kpi-desc">免备案自动化交付</span>
           </div>
         </div>
+
+        <details class="mobile-toc">
+          <summary>快速跳转技术章节目录 (TOC)</summary>
+          <ul class="toc-list" style="padding: 8px 0;">
+            <li><a href="#us-network-topology">1. 美西跨太平洋 CN2 与 BGP 拓扑</a></li>
+            <li><a href="#bandwidth-sizing">2. 30Mbps 独享端口吞吐量工程测算</a></li>
+            <li><a href="#us-compute-matrix">3. 北美全栈算力配置与价格矩阵</a></li>
+            <li><a href="#cli-benchmark">4. 终端路由与 NVMe I/O 验证指令</a></li>
+            <li><a href="#us-faq">5. 架构选型常见问题 (FAQ)</a></li>
+          </ul>
+        </details>
       </header>
 
-      <!-- 第一节：美西网络路由架构 -->
       <section id="us-network-topology">
         <h2>1. 美西（洛杉矶 LAX / 硅谷 SJC）跨太平洋 CN2 与北美 BGP 路由架构</h2>
-        <p>
-          美国西海岸（加利福尼亚州洛杉矶与硅谷）是北美通往亚太地区跨太平洋海底光缆的核心登陆站，同时也是北美 Tier-1 互联网骨干网与云厂商（Google、Cloudflare、AWS、Stripe、PayPal、Shopify）的对等互联中心。LuckVM 在美国节点采用<strong>“美西 CN2 跨洋直连优化 + 北美本土多线 BGP”</strong>的复合路由策略：
-        </p>
         <div class="checklist-grid">
           <div class="check-card">
             <h3>① 北美本土毫秒级对等互联</h3>
-            <p>面向美国、加拿大及拉美终端访客，流量直接通过北美 Tier-1 BGP 骨干网就近交换，访问北美电商支付网关（Stripe/PayPal）及第三方 SaaS API 延迟低至数毫秒。</p>
+            <p>面向美加及拉美访客，流量直接通过北美 Tier-1 BGP 骨干网就近交换，访问 Stripe/PayPal/Shopify 接口延迟低至数毫秒。</p>
           </div>
           <div class="check-card">
             <h3>② 跨太平洋 CN2 链路回程保障</h3>
-            <p>针对中国大陆出海团队的远程运维（SSH / SFTP / 数据库同步）与双向数据交互需求，采用美西 CN2 直连通道，规避传统国际公网绕道造成的晚高峰严重丢包。</p>
+            <p>针对中国大陆团队的远程运维（SSH / 数据库同步）优化美西 CN2 直连通道，规避传统国际公网绕道造成的晚高峰丢包。</p>
           </div>
           <div class="check-card">
-            <h3>③ 原生双栈 IPv4 + IPv6 与 DDoS 防护</h3>
-            <p>全系默认分配独立 IPv4 与 IPv6 地址，对 Google Search 爬虫抓取与海外邮件收发信誉度极佳；底层集成边缘流量识别与基础 DDoS 自动清洗能力。</p>
+            <h3>③ 原生双栈 IPv4 + IPv6 与高防</h3>
+            <p>默认分配独立 IPv4 与 IPv6 地址，对 Google 爬虫抓取极度友好；底层集成边缘流量识别与基础 DDoS 自动清洗。</p>
           </div>
         </div>
       </section>
 
-      <!-- 第二节：30Mbps vs 10Mbps 带宽工程测算 -->
       <section id="bandwidth-sizing">
         <h2>2. 30Mbps 独享不限流量端口吞吐量测算与同价位节点对比</h2>
-        <p>
-          在 LuckVM 的全球直连节点定价体系中，<strong>美国洛杉矶（CN2-30M）</strong>与<strong>中国香港（CN2 GIA-10M）</strong>的入门基准价均为 <strong>US$8.80/月</strong>、均标配 <strong>70GB NVMe SSD</strong>，但两者的网络端口规格针对不同业务负载进行了差异化配比：
-        </p>
-
         <div class="table-container">
           <table>
             <thead>
               <tr>
                 <th>技术参数指标</th>
-                <th>美国云服务器 (LAX / SJC - CN2 30M)</th>
-                <th>香港云服务器 (HKG - CN2 GIA 10M)</th>
-                <th>日本/新加坡/韩国/台湾节点 (CN2 10M)</th>
+                <th>美国 (LAX/SJC - CN2 30M)</th>
+                <th>香港 (HKG - CN2 GIA 10M)</th>
+                <th>日本/新加坡/韩国/台湾 (10M)</th>
               </tr>
             </thead>
             <tbody>
               <tr class="recommended-row">
-                <td><strong>标配独享带宽端口</strong></td>
-                <td><strong>30 Mbps 独享 (不限流量)</strong></td>
-                <td>10 Mbps 独享 (不限流量)</td>
-                <td>10 Mbps 独享 (不限流量)</td>
+                <td data-label="技术参数指标"><strong>标配独享端口</strong></td>
+                <td data-label="美国 CN2-30M"><strong>30 Mbps 独享 (不限流量)</strong></td>
+                <td data-label="香港 CN2 GIA">10 Mbps 独享 (不限流量)</td>
+                <td data-label="日/新/韩/台">10 Mbps 独享 (不限流量)</td>
               </tr>
               <tr class="recommended-row">
-                <td><strong>理论峰值每秒吞吐率</strong></td>
-                <td><strong>约 3.75 MB/s (持续满载不限速)</strong></td>
-                <td>约 1.25 MB/s (持续满载不限速)</td>
-                <td>约 1.25 MB/s (持续满载不限速)</td>
+                <td data-label="技术参数指标"><strong>理论峰值吞吐</strong></td>
+                <td data-label="美国 CN2-30M"><strong>约 3.75 MB/s (持续满载)</strong></td>
+                <td data-label="香港 CN2 GIA">约 1.25 MB/s</td>
+                <td data-label="日/新/韩/台">约 1.25 MB/s</td>
               </tr>
               <tr>
-                <td><strong>单日/月度理论最大传输量</strong></td>
-                <td><strong>单日 ~324 GB / 月度 ~9.7 TB</strong></td>
-                <td>单日 ~108 GB / 月度 ~3.2 TB</td>
-                <td>单日 ~108 GB / 月度 ~3.2 TB</td>
+                <td data-label="技术参数指标"><strong>月度最大传输</strong></td>
+                <td data-label="美国 CN2-30M"><strong>单日 ~324GB / 月度 ~9.7TB</strong></td>
+                <td data-label="香港 CN2 GIA">单日 ~108GB / 月度 ~3.2TB</td>
+                <td data-label="日/新/韩/台">单日 ~108GB / 月度 ~3.2TB</td>
               </tr>
               <tr>
-                <td><strong>入门计算与存储规格</strong></td>
-                <td>1 vCPU / 1 GB RAM / 70 GB NVMe</td>
-                <td>1 vCPU / 1 GB RAM / 70 GB NVMe</td>
-                <td>1 vCPU / 1 GB RAM / 70 GB NVMe</td>
+                <td data-label="技术参数指标"><strong>入门计算存储</strong></td>
+                <td data-label="美国 CN2-30M">1C / 1G / 70GB NVMe</td>
+                <td data-label="香港 CN2 GIA">1C / 1G / 70GB NVMe</td>
+                <td data-label="日/新/韩/台">1C / 1G / 70GB NVMe</td>
               </tr>
               <tr>
-                <td><strong>月付基准起价</strong></td>
-                <td><strong>$8.80 / 月</strong></td>
-                <td>$8.80 / 月</td>
-                <td>$11.00 / 月</td>
+                <td data-label="技术参数指标"><strong>入门月付起价</strong></td>
+                <td data-label="美国 CN2-30M"><strong>$8.80 / 月</strong></td>
+                <td data-label="香港 CN2 GIA">$8.80 / 月</td>
+                <td data-label="日/新/韩/台">$11.00 / 月</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <p style="font-size: 13.5px; color: var(--text-secondary);">
-          工程选型结论：当业务面向全球或北美客群，且包含大量静态商品图、PDF 产品画册下载、私有文件同步或高吞吐 Webhook 交互时，选择<strong>美国 30Mbps 独享套餐</strong>可在相同预算（$8.80/月）下获得 <strong>3 倍的并发带宽冗余</strong>。
-        </p>
       </section>
 
-      <!-- 第三节：北美全栈算力矩阵 -->
       <section id="us-compute-matrix">
         <h2>3. 北美可用区全栈算力规格与价格演进矩阵</h2>
-        <p>
-          LuckVM 在美国区域构建了从轻量级 KVM 虚拟机到 AI 深度学习 GPU 算力及单租户物理服务器的三层架构，支持业务在不同生命周期按需平滑扩展：
-        </p>
-
         <div class="table-container">
           <table>
             <thead>
               <tr>
                 <th>资源形态类别</th>
-                <th>可用区节点</th>
-                <th>处理器 / GPU 核心配置</th>
+                <th>可用区</th>
+                <th>核心处理器 / GPU</th>
                 <th>内存与存储阵列</th>
-                <th>网络带宽与安全防护</th>
-                <th>官方计费标准</th>
-                <th>官方订购与部署入口</th>
+                <th>带宽与防护</th>
+                <th>计费标准</th>
+                <th>部署入口</th>
               </tr>
             </thead>
             <tbody>
               <tr class="recommended-row">
-                <td><strong>云服务器 VPS (入门款)</strong></td>
-                <td>洛杉矶 / 硅谷</td>
-                <td>1 vCPU (支持弹性扩容)</td>
-                <td>1 GB RAM / 60G+10G (70GB NVMe)</td>
-                <td><strong>30 Mbps 独享 CN2</strong> / 不限流量 / 自带DDoS防护</td>
-                <td><strong>$8.80 / 月起</strong></td>
-                <td><a href="https://www.luckvm.com/zh/us-cloud-server.html" style="color:var(--accent-blue);font-weight:600;">订购美国 VPS →</a></td>
+                <td data-label="资源形态"><strong>云服务器 VPS</strong></td>
+                <td data-label="可用区">洛杉矶/硅谷</td>
+                <td data-label="处理器/GPU">1 vCPU (弹性扩容)</td>
+                <td data-label="内存与存储">1G RAM / 70GB NVMe</td>
+                <td data-label="带宽与防护"><strong>30M 独享 CN2</strong> / 不限流</td>
+                <td data-label="计费标准"><strong>$8.80 / 月起</strong></td>
+                <td data-label="部署入口"><a href="https://www.luckvm.com/zh/us-cloud-server.html" style="color:var(--accent-blue);font-weight:700;">订购 VPS →</a></td>
               </tr>
               <tr>
-                <td><strong>AI GPU 算力云服务器</strong></td>
-                <td>美国洛杉矶 / 新加坡</td>
-                <td><strong>NVIDIA RTX 4090 (24GB 显存)</strong><br>(可选 RTX 3090 / A10 / A100 / H100)</td>
-                <td>100% 独享计算资源 / NVMe 高速盘 / 预装 CUDA &amp; PyTorch</td>
-                <td>独享高吞吐带宽 / 适合大模型 QLoRA 微调与推理</td>
-                <td><strong>$1.20 / 小时起</strong><br>(支持按时/包月)</td>
-                <td><a href="https://www.luckvm.com/zh/gpu-server-purchase.html" style="color:var(--accent-blue);font-weight:600;">部署 GPU 实例 →</a></td>
+                <td data-label="资源形态"><strong>AI GPU 云服务器</strong></td>
+                <td data-label="可用区">洛杉矶/新加坡</td>
+                <td data-label="处理器/GPU"><strong>RTX 4090 (24GB)</strong> / A100</td>
+                <td data-label="内存与存储">独享算力 / 预装CUDA</td>
+                <td data-label="带宽与防护">独享高带宽 / LLM微调</td>
+                <td data-label="计费标准"><strong>$1.20 / 小时起</strong></td>
+                <td data-label="部署入口"><a href="https://www.luckvm.com/zh/gpu-server-purchase.html" style="color:var(--accent-blue);font-weight:700;">部署 GPU →</a></td>
               </tr>
               <tr>
-                <td><strong>硅谷入门独立物理机</strong></td>
-                <td>美国硅谷 (SJC)</td>
-                <td><strong>Intel Xeon E3-1230 v3 (4核)</strong><br>(100% 物理独享，零虚拟化损耗)</td>
-                <td><strong>32 GB DDR4</strong> / 1 TB 企业级 HDD (支持自定义SSD/RAID)</td>
-                <td>30M 或 100M 独享不限流量 / <strong>10 Gbps DDoS 防护</strong> / IPMI 管理</td>
-                <td><strong>$88.00 / 月起</strong></td>
-                <td><a href="https://www.luckvm.com/zh/physical-server-purchase.html" style="color:var(--accent-blue);font-weight:600;">订购硅谷物理机 →</a></td>
-              </tr>
-              <tr>
-                <td><strong>双路金牌高防物理机</strong></td>
-                <td>全球核心机房</td>
-                <td><strong>2× Xeon Gold 6148 (40核80线程)</strong></td>
-                <td><strong>256 GB DDR4 ECC</strong> / 2×1TB NVMe + 4×4TB SATA</td>
-                <td>100M 独享(可升1G) / 13个IPv4 / <strong>50 Gbps DDoS防护(可升T级)</strong></td>
-                <td><strong>$399.00 / 月起</strong></td>
-                <td><a href="https://www.luckvm.com/zh/physical-server-purchase.html" style="color:var(--accent-blue);font-weight:600;">订购高防物理机 →</a></td>
+                <td data-label="资源形态"><strong>硅谷独立物理机</strong></td>
+                <td data-label="可用区">美国硅谷</td>
+                <td data-label="处理器/GPU"><strong>Xeon E3-1230 v3 (4核)</strong></td>
+                <td data-label="内存与存储"><strong>32GB DDR4</strong> / 1TB HDD</td>
+                <td data-label="带宽与防护">30M/100M独享 / 10G高防</td>
+                <td data-label="计费标准"><strong>$88.00 / 月起</strong></td>
+                <td data-label="部署入口"><a href="https://www.luckvm.com/zh/physical-server-purchase.html" style="color:var(--accent-blue);font-weight:700;">订购物理机 →</a></td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- 第四节：终端基准验证指南 -->
       <section id="cli-benchmark">
         <h2>4. 实例交付后网络吞吐与 70GB NVMe 存储验证指令</h2>
-        <p>
-          美国云服务器在完成付款后 <strong>1 至 5 分钟内</strong>自动开通。登录 SSH 后，可通过以下标准命令核验 60GB+10GB NVMe 磁盘挂载状态、磁盘 I/O 读写速率及 30Mbps 跨洋/北美本土链路质量：
-        </p>
-
         <div class="code-block">
-<span class="code-comment"># 1. 查看 60GB 系统盘与 10GB 附加 NVMe 数据盘的块设备挂载情况</span>
-lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,MODEL
+<span class="code-comment"># 1. 查看 60GB 系统盘与 10GB 附加 NVMe 数据盘块设备状态</span>
+lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT
 
-<span class="code-comment"># 2. 测试 NVMe SSD 阵列的顺序读写带宽 (标称基准 &gt;3000 MB/s)</span>
-fio --name=us_nvme_bench --rw=readwrite --bs=1M --size=2G --numjobs=1 --ioengine=libaio --direct=1 --group_reporting
-
-<span class="code-comment"># 3. 追踪美国实例至北美 Cloudflare/Google 节点及中国大陆回程的实时路由与抖动</span>
-mtr -r -c 30 -n 1.1.1.1
+<span class="code-comment"># 2. 测试 NVMe SSD 阵列顺序读写带宽 (&gt;3000 MB/s)</span>
+fio --name=us_nvme --rw=readwrite --bs=1M --size=2G --numjobs=1 --ioengine=libaio --direct=1 --group_reporting
         </div>
       </section>
 
-      <!-- 第五节：FAQ -->
       <section id="us-faq">
-        <h2>5. 美国节点架构选型与运维常见问答 (Engineering FAQ)</h2>
+        <h2>5. 美国节点架构选型常见问答 (Engineering FAQ)</h2>
+        <h3>Q1：如果防火墙配置失误导致 SSH 断开，如何远程自救？</h3>
+        <p>可直接登录 LuckVM 自研 Web 控制面板开启 <strong>VNC 远程控制台</strong>，即使实例内网络配置错误也能直连终端修复或一键重装系统。</p>
 
-        <h3>Q1：70GB NVMe 存储中的“60GB + 10GB”是如何分配的？应该如何规划目录？</h3>
-        <p>
-          入门套餐包含 60 GB 主系统盘与 10 GB 附加存储空间（合计 70 GB 高速 NVMe SSD）。在部署 WordPress、WooCommerce 或 Docker 容器环境时，建议将操作系统与核心运行环境安装在 60 GB 主分区，同时利用独立分区或快照（Snapshot）机制管理数据库备份与业务日志，确保系统重装或回滚时核心业务数据互不干扰。
-        </p>
-
-        <h3>Q2：如果系统防火墙配置错误导致 SSH 无法连接，如何自救？</h3>
-        <p>
-          无需依赖人工工单排障，您可直接登录 LuckVM 自研 Web 控制面板，开启内置的 <strong>VNC 远程控制台</strong>。VNC 通过宿主机底层直连虚拟机显示终端，即使实例内网卡被禁用或防火墙规则锁死，依然可以在浏览器内直接登录终端修复网络配置或一键重装系统。
-        </p>
-
-        <h3>Q3：支持哪些操作系统镜像与付款结算方式？</h3>
-        <p>
-          系统层免费提供 Ubuntu (20.04/22.04)、CentOS (7/8)、Debian (10/11)、Rocky Linux、AlmaLinux、Fedora、openEuler 与 TencentOS，并支持 Windows Server 2019/2022 及上传自定义 ISO。结算通道支持<strong>支付宝 (Alipay)、USDT、信用卡/借记卡、Google Pay 与对公银行转账</strong>。
-        </p>
+        <h3>Q2：支持哪些付款方式？</h3>
+        <p>全面支持<strong>支付宝 (Alipay)、USDT、信用卡/借记卡、Google Pay 与对公银行转账</strong>，付款后 1–5 分钟自动开通交付。</p>
       </section>
 
-      <!-- 底部转化横幅 -->
       <div class="action-banner">
         <div>
-          <div style="font-size: 16px; font-weight: 700; color: var(--text-primary);">立即部署 LuckVM 美国洛杉矶 / 硅谷 CN2-30M 云服务器</div>
-          <div style="font-size: 13.5px; color: var(--text-secondary);">30Mbps 独享不限流量 · 70GB NVMe 固态阵列 · 免备案 1 分钟自动开通 ($8.80/月起)</div>
+          <div style="font-size: 16px; font-weight: 700;">立即部署 LuckVM 美国洛杉矶 / 硅谷 CN2-30M 云服务器</div>
+          <div style="font-size: 13px; color: var(--text-secondary);">30Mbps 独享不限流量 · 70GB NVMe 阵列 · 免备案 1 分钟自动开通 ($8.80/月起)</div>
         </div>
         <div class="btn-group">
-          <a href="https://www.luckvm.com/zh/us-cloud-server.html" class="btn-solid">前往 LuckVM 官网立即订购</a>
-          <a href="https://www.luckvm.com/zh/physical-server-purchase.html" class="btn-outline">查看硅谷 $88/月 独立物理机</a>
+          <a href="https://www.luckvm.com/zh/us-cloud-server.html" class="btn-solid">前往官网立即订购</a>
+          <a href="https://www.luckvm.com/zh/physical-server-purchase.html" class="btn-outline">查看硅谷 $88/月 物理机</a>
         </div>
       </div>
-
     </main>
   </div>
 
   <footer class="doc-footer">
-    <div>© 2026 LuckVM Cloud Infrastructure Documentation. All rights reserved.</div>
+    <div>© 2026 LuckVM Cloud Infrastructure Documentation.</div>
     <div>
-      全球节点文档：
-      <a href="https://www.luckvm.com/zh/us-cloud-server.html">美国 CN2-30M ($8.80/月)</a> ·
+      全球节点文档：<a href="https://www.luckvm.com/zh/us-cloud-server.html">美国 CN2-30M ($8.80/月)</a> ·
       <a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港 CN2 GIA ($8.80/月)</a> ·
-      <a href="https://www.luckvm.com/zh/jp-cloud-server.html">日本东京 CN2 ($11/月)</a> ·
-      <a href="https://www.luckvm.com/zh/sg-cloud-server.html">新加坡 CN2 ($11/月)</a> ·
       <a href="https://www.luckvm.com/zh/gpu-server-purchase.html">RTX 4090 GPU ($1.2/小时)</a>
     </div>
   </footer>
+
+  <!-- 手机端专属底部固定转化栏 -->
+  <div class="mobile-sticky-bar">
+    <div>
+      <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">美国 CN2-30M 云服务器</div>
+      <div style="font-size: 12px; color: var(--accent-blue); font-weight: 600;">$8.80/月起 · 30M独享 · 70G NVMe</div>
+    </div>
+    <a href="https://www.luckvm.com/zh/us-cloud-server.html" class="btn-solid" style="min-height: 40px; padding: 8px 16px; font-size: 13.5px;">立即选购 →</a>
+  </div>
 
 </body>
 </html>
