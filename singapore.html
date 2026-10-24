@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+  <title>新加坡CN2云服务器网络评测与东南亚BGP/RTX 4090 GPU算力规范-LuckVM</title>
+  <meta name="description" content="深度解析LuckVM新加坡数据中心(SIN) CN2直连与东南亚国际BGP多线路由架构。提供中国大陆往返延迟基准(40-60ms)、70GB NVMe (>3000MB/s) 存储I/O参数，以及从$11.00/月KVM云实例到新加坡RTX 4090 GPU算力实例($1.20/小时)与东盟Tier-1 IX节点的架构选型规范。">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+
+  <link rel="canonical" href="https://luckvm-cloud.github.io/zh/vps/singapore/">
+  <link rel="alternate" hreflang="zh-CN" href="https://luckvm-cloud.github.io/zh/vps/singapore/">
+  <link rel="alternate" hreflang="zh-TW" href="https://luckvm-cloud.github.io/tw/vps/singapore/">
+  <link rel="alternate" hreflang="en" href="https://luckvm-cloud.github.io/en/vps/singapore/">
+  <link rel="alternate" hreflang="x-default" href="https://luckvm-cloud.github.io/en/vps/singapore/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="LuckVM Infrastructure & Network Docs">
+  <meta property="og:title" content="新加坡CN2云服务器网络评测与东南亚BGP/RTX 4090 GPU算力规范 - LuckVM">
+  <meta property="og:description" content="中国大陆直连延迟40-60ms，标配10Mbps独享CN2带宽与70GB NVMe固态阵列，$11.00/月起；同步覆盖新加坡RTX 4090 (24GB) AI GPU算力实例($1.20/小时)。">
+  <meta property="og:url" content="https://luckvm-cloud.github.io/zh/vps/singapore/">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "LuckVM新加坡节点(SIN) CN2路由拓扑、40-60ms延迟矩阵与AI算力协同技术规范",
+        "description": "面向系统架构师、东南亚出海研发与AI工程团队的新加坡数据中心技术文档，涵盖新加坡CN2直连与东盟BGP互联、40-60ms延迟基准、70GB NVMe读写性能及RTX 4090 GPU算力参数。",
+        "inLanguage": "zh-CN",
+        "datePublished": "2026-10-13",
+        "dateModified": "2026-10-24",
+        "author": { "@type": "Organization", "name": "LuckVM Cloud Infrastructure Team", "url": "https://www.luckvm.com/zh/index.html" },
+        "publisher": { "@type": "Organization", "name": "LuckVM", "url": "https://www.luckvm.com/zh/index.html" },
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "https://luckvm-cloud.github.io/zh/vps/singapore/" }
+      },
+      {
+        "@type": "Product",
+        "name": "LuckVM 新加坡 CN2 云服务器 (Singapore KVM NVMe VPS)",
+        "brand": { "@type": "Brand", "name": "LuckVM" },
+        "description": "新加坡数据中心KVM全虚拟化云服务器，采用新加坡CN2直连与国际BGP多线网络，中国大陆延迟40-60ms，标配70GB NVMe SSD固态阵列（读写>3000MB/s）、10Mbps独享不限流量带宽、独立IPv4/IPv6及DDoS防护。",
+        "url": "https://www.luckvm.com/zh/sg-cloud-server.html",
+        "category": "Infrastructure as a Service (IaaS) / Cloud VPS",
+        "offers": {
+          "@type": "AggregateOffer",
+          "priceCurrency": "USD",
+          "lowPrice": "1.20",
+          "highPrice": "11.00",
+          "offerCount": "2",
+          "offers": [
+            { "@type": "Offer", "name": "新加坡 CN2 云服务器入门款 (1C/1G/70G NVMe/10Mbps CN2)", "price": "11.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.luckvm.com/zh/sg-cloud-server.html" },
+            { "@type": "Offer", "name": "新加坡 RTX 4090 GPU 算力实例 (24GB VRAM / 预装CUDA & PyTorch)", "price": "1.20", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.luckvm.com/zh/gpu-server-purchase.html" }
+          ]
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-body: #f6f8fa;
+      --bg-surface: #ffffff;
+      --bg-code: #0d1117;
+      --text-primary: #1f2328;
+      --text-secondary: #59636e;
+      --border-color: #d1d9e0;
+      --accent-blue: #0969da;
+      --accent-blue-hover: #0550ae;
+      --badge-bg: #ddf4ff;
+      --badge-text: #0969da;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-body);
+      color: var(--text-primary);
+      line-height: 1.65;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      background-color: #24292f;
+      color: #ffffff;
+      padding: 10px 16px;
+      border-bottom: 1px solid #30363d;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 15.5px;
+      color: #ffffff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-tag {
+      background: #0969da;
+      color: #ffffff;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 14px;
+      font-size: 13px;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+    }
+
+    .top-nav a { color: #e6edf3; text-decoration: none; min-height: 36px; display: inline-flex; align-items: center; }
+
+    .layout-wrapper {
+      max-width: 1180px;
+      margin: 24px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 68px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 13.5px; }
+    .toc-list a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .toc-list a:hover { background: var(--bg-body); color: var(--accent-blue); }
+
+    .sidebar-cta {
+      background: #f0f6fc;
+      border: 1px solid #b6e3ff;
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-cta-btn {
+      background: var(--accent-blue);
+      color: #ffffff;
+      text-decoration: none;
+      text-align: center;
+      min-height: 42px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-toc {
+      display: none;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px 14px;
+    }
+
+    .mobile-toc summary {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--accent-blue);
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .mobile-toc summary::-webkit-details-marker { display: none; }
+    .mobile-toc summary::after { content: "▼ 展开章节"; font-size: 12px; }
+    .mobile-toc[open] summary::after { content: "▲ 收起"; }
+
+    .doc-main {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      min-width: 0;
+    }
+
+    .breadcrumb { font-size: 12.5px; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .breadcrumb a { color: var(--accent-blue); text-decoration: none; }
+
+    .doc-header { border-bottom: 1px solid var(--border-color); padding-bottom: 20px; display: flex; flex-direction: column; gap: 14px; }
+    .tech-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tech-badge {
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid #b6e3ff;
+    }
+
+    h1 { font-size: clamp(20px, 4vw, 28px); font-weight: 700; line-height: 1.3; }
+    .doc-lead { font-size: 14.5px; color: var(--text-secondary); }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      background: var(--bg-body);
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .kpi-item { display: flex; flex-direction: column; gap: 2px; }
+    .kpi-code { font-family: var(--font-mono); font-size: clamp(16px, 2.5vw, 20px); font-weight: 700; color: var(--accent-blue); }
+    .kpi-desc { font-size: 12px; color: var(--text-secondary); }
+
+    section { display: flex; flex-direction: column; gap: 14px; }
+    h2 { font-size: clamp(17px, 3vw, 20px); font-weight: 700; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+    h3 { font-size: 15.5px; font-weight: 700; margin-top: 4px; }
+
+    .table-container { width: 100%; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+    th { background: var(--bg-body); font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+    tr:last-child td { border-bottom: none; }
+    tr.recommended-row td { background-color: #f0f6fc; }
+
+    .code-block {
+      background: var(--bg-code);
+      color: #e6edf3;
+      border-radius: 8px;
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.55;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .code-comment { color: #8b949e; }
+
+    .checklist-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .check-card { border: 1px solid var(--border-color); border-radius: 6px; padding: 14px; background: var(--bg-body); }
+    .check-card h3 { font-size: 14.5px; margin-bottom: 6px; color: var(--accent-blue); }
+    .check-card p { font-size: 13px; color: var(--text-secondary); }
+
+    .action-banner {
+      background: #f0f6fc;
+      border: 1px solid #b6e3ff;
+      border-radius: 8px;
+      padding: 18px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-group { display: flex; flex-wrap: wrap; gap: 10px; }
+    .btn-solid, .btn-outline {
+      min-height: 44px;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-solid { background: var(--accent-blue); color: #ffffff; }
+    .btn-outline { background: #ffffff; color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+
+    .doc-footer {
+      max-width: 1180px;
+      margin: 20px auto 40px;
+      padding: 0 16px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .doc-footer a { color: var(--accent-blue); text-decoration: none; }
+
+    .mobile-sticky-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      padding: 10px 14px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+      z-index: 200;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .layout-wrapper { grid-template-columns: 1fr; margin: 12px auto; }
+      .sidebar { display: none; }
+      .mobile-toc { display: block; }
+      .checklist-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      body { padding-bottom: 72px; }
+      .doc-main { padding: 18px 14px; gap: 22px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+      .table-container { border: none; background: transparent; }
+      table, thead, tbody, th, td, tr { display: block; width: 100%; }
+      thead tr { position: absolute; top: -9999px; left: -9999px; }
+      tbody tr {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 12px;
+        background: #ffffff;
+        overflow: hidden;
+      }
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        text-align: right;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--text-primary);
+        text-align: left;
+        flex-shrink: 0;
+      }
+
+      .action-banner { flex-direction: column; align-items: stretch; }
+      .btn-group { flex-direction: column; width: 100%; }
+      .btn-solid, .btn-outline { width: 100%; }
+      .mobile-sticky-bar { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="https://www.luckvm.com/zh/index.html" class="brand-title">
+        <span>LuckVM Docs</span>
+        <span class="brand-tag">SG-SIN / CN2</span>
+      </a>
+      <nav class="top-nav" aria-label="全球节点技术文档导航">
+        <a href="https://www.luckvm.com/zh/sg-cloud-server.html">新加坡云服务器</a>
+        <a href="https://www.luckvm.com/zh/gpu-server-purchase.html">新加坡 AI GPU</a>
+        <a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港 CN2 GIA</a>
+        <a href="https://www.luckvm.com/zh/jp-cloud-server.html">日本东京 CN2</a>
+        <a href="https://www.luckvm.com/zh/us-cloud-server.html">美国 CN2-30M</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="layout-wrapper">
+    <aside class="sidebar" aria-label="桌面端文档目录">
+      <div class="sidebar-title">技术文档目录 (TOC)</div>
+      <ul class="toc-list">
+        <li><a href="#sg-network-topology">1. 新加坡 CN2 与东盟 BGP 拓扑</a></li>
+        <li><a href="#sg-latency-matrix">2. 40-60ms 延迟与亚太节点对比</a></li>
+        <li><a href="#sg-compute-matrix">3. 新加坡 VPS 与 RTX 4090 规格</a></li>
+        <li><a href="#cli-verification">4. 部署前路由与 NVMe 验证</a></li>
+        <li><a href="#sg-faq">5. 架构师常见问答 (FAQ)</a></li>
+      </ul>
+      <div class="sidebar-cta">
+        <div style="font-size: 13px; font-weight: 700;">新加坡 CN2 实例交付</div>
+        <div style="font-size: 12px; color: var(--text-secondary);">1核1G / 70GB NVMe / 10Mbps独享不限流量，$11.00/月起。</div>
+        <a href="https://www.luckvm.com/zh/sg-cloud-server.html" class="sidebar-cta-btn">前往官网查看实时库存 →</a>
+      </div>
+    </aside>
+
+    <main class="doc-main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="https://www.luckvm.com/zh/index.html">LuckVM 文档中心</a>
+        <span>/</span>
+        <a href="https://www.luckvm.com/zh/cloud-server-purchase.html">云服务器 (VPS)</a>
+        <span>/</span>
+        <span>新加坡节点 (SIN)</span>
+      </nav>
+
+      <header class="doc-header">
+        <div class="tech-badges">
+          <span class="tech-badge">Zone: Singapore (SIN)</span>
+          <span class="tech-badge">10 Mbps Dedicated CN2 + BGP</span>
+          <span class="tech-badge">70GB NVMe (&gt;3000 MB/s)</span>
+        </div>
+        <h1>LuckVM新加坡节点(SIN) CN2路由拓扑、40-60ms延迟矩阵与AI算力协同技术规范</h1>
+        <p class="doc-lead">
+          本文档面向系统架构师、东南亚出海研发与 AI 工程团队，深度解析 <a href="https://www.luckvm.com/zh/sg-cloud-server.html" style="color:var(--accent-blue);font-weight:600;">LuckVM 新加坡云服务器</a> 的 CN2 直连与东南亚国际 BGP 对等互联架构、中国大陆往返延迟基准（40–60ms），以及从 $11.00/月 KVM 实例与同机房 NVIDIA RTX 4090 GPU 算力实例（$1.20/小时）协同组网的技术规范。
+        </p>
+
+        <div class="kpi-grid">
+          <div class="kpi-item">
+            <span class="kpi-code">40 - 60 ms</span>
+            <span class="kpi-desc">中国大陆直连平均 RTT</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-code">70 GB NVMe</span>
+            <span class="kpi-desc">60G+10G (&gt;3000 MB/s)</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-code">$11.00 / 月</span>
+            <span class="kpi-desc">10M 独享 CN2 不限流量</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-code">$1.20 / 小时</span>
+            <span class="kpi-desc">同区 RTX 4090 GPU 可选</span>
+          </div>
+        </div>
+
+        <details class="mobile-toc">
+          <summary>快速跳转技术章节目录 (TOC)</summary>
+          <ul class="toc-list" style="padding: 8px 0;">
+            <li><a href="#sg-network-topology">1. 新加坡 CN2 与东南亚 BGP 路由拓扑</a></li>
+            <li><a href="#sg-latency-matrix">2. 40-60ms 延迟与亚太节点对比</a></li>
+            <li><a href="#sg-compute-matrix">3. 新加坡 VPS 与 RTX 4090 算力规格</a></li>
+            <li><a href="#cli-verification">4. 部署前路由与 NVMe 验证指令</a></li>
+            <li><a href="#sg-faq">5. 架构师常见问答 (FAQ)</a></li>
+          </ul>
+        </details>
+      </header>
+
+      <section id="sg-network-topology">
+        <h2>1. 新加坡 (SIN) CN2 直连与东南亚核心海缆 BGP 路由架构</h2>
+        <div class="checklist-grid">
+          <div class="check-card">
+            <h3>① 东南亚全境毫秒级覆盖</h3>
+            <p>直通东南亚多国海缆登陆站与本地 IX，辐射吉隆坡 (MyIX)、雅加达 (JKT-IX)、胡志明市、曼谷与马尼拉，实现东盟区域 API 极速响应。</p>
+          </div>
+          <div class="check-card">
+            <h3>② 中国大陆 40-60ms CN2 直连</h3>
+            <p>去回程接入中国电信 CN2 与三网直连通道，中国大陆平均往返延迟仅 40–60ms（低于日本东京的 50–70ms），晚高峰不限速不丢包。</p>
+          </div>
+          <div class="check-card">
+            <h3>③ Web 应用与 AI GPU 同区协同</h3>
+            <p>新加坡可用区同步部署 RTX 4090 (24GB VRAM) 等独享 GPU 实例，支持将前端业务网关与后端 LLM 推理模型部署在同一数据中心内。</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="sg-latency-matrix">
+        <h2>2. 新加坡与亚太及东南亚节点网络延迟与规格对比</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>测试指标</th>
+                <th>新加坡 (SIN - CN2)</th>
+                <th>香港 (HKG - CN2 GIA)</th>
+                <th>日本东京 (TYO - CN2)</th>
+                <th>马来/印尼 (MyIX / JKT-IX)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="recommended-row">
+                <td data-label="测试指标"><strong>中国大陆平均延迟</strong></td>
+                <td data-label="新加坡 CN2"><strong>40 - 60 ms</strong></td>
+                <td data-label="香港 CN2 GIA">5 - 22 ms (沿海&lt;10ms)</td>
+                <td data-label="日本东京 CN2">50 - 70 ms</td>
+                <td data-label="马来/印尼 IX">本地 IX 对等互联</td>
+              </tr>
+              <tr class="recommended-row">
+                <td data-label="测试指标"><strong>标配端口带宽</strong></td>
+                <td data-label="新加坡 CN2"><strong>10 Mbps 独享不限流</strong></td>
+                <td data-label="香港 CN2 GIA">10 Mbps 独享不限流</td>
+                <td data-label="日本东京 CN2">10 Mbps 独享不限流</td>
+                <td data-label="马来/印尼 IX">1 Gbps 端口</td>
+              </tr>
+              <tr>
+                <td data-label="测试指标"><strong>入门硬件存储</strong></td>
+                <td data-label="新加坡 CN2">1C / 1G / <strong>70GB NVMe</strong></td>
+                <td data-label="香港 CN2 GIA">1C / 1G / 70GB NVMe</td>
+                <td data-label="日本东京 CN2">1C / 1G / 70GB NVMe</td>
+                <td data-label="马来/印尼 IX">1C / 512MB / 5GB SSD</td>
+              </tr>
+              <tr>
+                <td data-label="测试指标"><strong>入门月付起价</strong></td>
+                <td data-label="新加坡 CN2"><strong>$11.00 / 月</strong></td>
+                <td data-label="香港 CN2 GIA">$8.80 / 月</td>
+                <td data-label="日本东京 CN2">$11.00 / 月</td>
+                <td data-label="马来/印尼 IX">$4.93 / 月</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="sg-compute-matrix">
+        <h2>3. 新加坡可用区云服务器与 AI GPU 算力规格矩阵</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>资源形态类别</th>
+                <th>处理器 / GPU</th>
+                <th>内存与存储配置</th>
+                <th>独享带宽与环境</th>
+                <th>IP 与隔离属性</th>
+                <th>计费起价</th>
+                <th>部署入口</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="recommended-row">
+                <td data-label="资源形态"><strong>新加坡 CN2 云服务器</strong></td>
+                <td data-label="处理器/GPU">1 vCPU (弹性扩容)</td>
+                <td data-label="内存与存储">1G RAM / 60G+10G NVMe</td>
+                <td data-label="带宽与环境">10 Mbps CN2 独享不限</td>
+                <td data-label="隔离属性">KVM / 独立双栈 IP</td>
+                <td data-label="计费起价"><strong>$11.00 / 月</strong></td>
+                <td data-label="部署入口"><a href="https://www.luckvm.com/zh/sg-cloud-server.html" style="color:var(--accent-blue);font-weight:700;">订购 VPS →</a></td>
+              </tr>
+              <tr>
+                <td data-label="资源形态"><strong>新加坡 AI GPU 实例</strong></td>
+                <td data-label="处理器/GPU"><strong>RTX 4090 (24GB)</strong> / A100</td>
+                <td data-label="内存与存储">高速 NVMe 阵列</td>
+                <td data-label="带宽与环境">预装 CUDA / PyTorch</td>
+                <td data-label="隔离属性"><strong>100% 独享 GPU 资源</strong></td>
+                <td data-label="计费起价"><strong>$1.20 / 小时</strong></td>
+                <td data-label="部署入口"><a href="https://www.luckvm.com/zh/gpu-server-purchase.html" style="color:var(--accent-blue);font-weight:700;">部署 GPU →</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="cli-verification">
+        <h2>4. 实例交付后网络路由与 70GB NVMe 磁盘基准验证指令</h2>
+        <div class="code-block">
+<span class="code-comment"># 1. 验证新加坡实例至中国大陆及东南亚目标节点的实时回程路由与 RTT 延迟</span>
+mtr -r -c 50 -n &lt;目标客户端公网IP&gt;
+
+<span class="code-comment"># 2. 测试 70GB NVMe SSD 阵列的顺序读写吞吐 (&gt;3000 MB/s)</span>
+fio --name=sg_nvme --rw=readwrite --bs=1M --size=2G --numjobs=1 --ioengine=libaio --direct=1 --group_reporting
+        </div>
+      </section>
+
+      <section id="sg-faq">
+        <h2>5. 新加坡节点架构选型常见问答 (Engineering FAQ)</h2>
+        <h3>Q1：在新加坡节点部署业务，如何与吉隆坡 ($4.93/月) 或雅加达 ($4.93/月) 节点协同？</h3>
+        <p>对于面向整个东南亚市场的分布式架构，推荐将<strong>主数据库（MySQL/PostgreSQL）、核心交易后台与 Redis 缓存部署在新加坡 CN2 节点（70GB NVMe，$11.00/月）</strong>，利用其大容量高 IOPS 存储与 40–60ms 中国大陆直连优势便于国内研发团队运维；同时在马来西亚或印尼部署 $4.93/月 的 1Gbps IX 边缘节点作为前端反向代理。</p>
+
+        <h3>Q2：新加坡云服务器付款后多久交付？支持哪些支付方式？</h3>
+        <p>免备案即买即用，云服务器在支付后 <strong>1–5 分钟内自动开通</strong>并发送凭证至邮箱。全面支持<strong>支付宝 (Alipay)、USDT、信用卡/借记卡、Google Pay 与对公银行转账</strong>。</p>
+      </section>
+
+      <div class="action-banner">
+        <div>
+          <div style="font-size: 16px; font-weight: 700;">立即部署 LuckVM 新加坡 CN2 云服务器或 RTX 4090 GPU 实例</div>
+          <div style="font-size: 13px; color: var(--text-secondary);">大陆直连 40-60ms · 70GB NVMe 阵列 · 免备案 1 分钟自动交付 ($11.00/月起)</div>
+        </div>
+        <div class="btn-group">
+          <a href="https://www.luckvm.com/zh/sg-cloud-server.html" class="btn-solid">前往官网选购新加坡 VPS</a>
+          <a href="https://www.luckvm.com/zh/gpu-server-purchase.html" class="btn-outline">查看新加坡 $1.2/h GPU</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="doc-footer">
+    <div>© 2026 LuckVM Cloud Infrastructure Documentation.</div>
+    <div>
+      全球节点文档：<a href="https://www.luckvm.com/zh/sg-cloud-server.html">新加坡 CN2 ($11/月)</a> ·
+      <a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港 CN2 GIA ($8.80/月)</a> ·
+      <a href="https://www.luckvm.com/zh/jp-cloud-server.html">日本 CN2 ($11/月)</a> ·
+      <a href="https://www.luckvm.com/zh/us-cloud-server.html">美国 CN2-30M ($8.80/月)</a>
+    </div>
+  </footer>
+
+  <!-- 手机端专属底部固定转化栏 -->
+  <div class="mobile-sticky-bar">
+    <div>
+      <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">新加坡 CN2 云服务器</div>
+      <div style="font-size: 12px; color: var(--accent-blue); font-weight: 600;">$11.00/月起 · 10M独享 · 70G NVMe</div>
+    </div>
+    <a href="https://www.luckvm.com/zh/sg-cloud-server.html" class="btn-solid" style="min-height: 40px; padding: 8px 16px; font-size: 13.5px;">立即选购 →</a>
+  </div>
+
+</body>
+</html>
