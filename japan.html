@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+  <title>日本东京CN2云服务器网络评测与Xeon 6138独立物理机硬件规范-LuckVM</title>
+  <meta name="description" content="深度解析LuckVM日本东京数据中心(TYO) CN2直连与国际BGP多线路由架构。提供中国大陆往返延迟基准(50-70ms)、70GB NVMe (>3000MB/s) 存储I/O参数，以及从$11.00/月KVM云实例到东京20核Xeon 6138独立物理机($220/月，含3个独立IPv4)的技术选型规范。">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+
+  <link rel="canonical" href="https://luckvm-cloud.github.io/zh/vps/japan/">
+  <link rel="alternate" hreflang="zh-CN" href="https://luckvm-cloud.github.io/zh/vps/japan/">
+  <link rel="alternate" hreflang="zh-TW" href="https://luckvm-cloud.github.io/tw/vps/japan/">
+  <link rel="alternate" hreflang="en" href="https://luckvm-cloud.github.io/en/vps/japan/">
+  <link rel="alternate" hreflang="x-default" href="https://luckvm-cloud.github.io/en/vps/japan/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="LuckVM Infrastructure & Network Docs">
+  <meta property="og:title" content="日本东京CN2云服务器网络评测与Xeon 6138独立物理机硬件规范 - LuckVM">
+  <meta property="og:description" content="中国大陆延迟50-70ms，标配10Mbps独享CN2带宽与70GB NVMe固态阵列，$11.00/月起；同步覆盖东京20核Xeon 6138独立物理机($220/月)。">
+  <meta property="og:url" content="https://luckvm-cloud.github.io/zh/vps/japan/">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "LuckVM日本东京节点(TYO) CN2路由拓扑、东亚延迟矩阵与算力选型技术规范",
+        "description": "面向系统架构师与跨境运维团队的日本东京数据中心技术文档，涵盖东京CN2直连与BGP对等互联、50-70ms延迟基准、70GB NVMe读写性能及Xeon 6138物理服务器硬件参数。",
+        "inLanguage": "zh-CN",
+        "datePublished": "2026-10-13",
+        "dateModified": "2026-10-24",
+        "author": { "@type": "Organization", "name": "LuckVM Cloud Infrastructure Team", "url": "https://www.luckvm.com/zh/index.html" },
+        "publisher": { "@type": "Organization", "name": "LuckVM", "url": "https://www.luckvm.com/zh/index.html" },
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "https://luckvm-cloud.github.io/zh/vps/japan/" }
+      },
+      {
+        "@type": "Product",
+        "name": "LuckVM 日本东京 CN2 云服务器 (Tokyo KVM NVMe VPS)",
+        "brand": { "@type": "Brand", "name": "LuckVM" },
+        "description": "日本东京数据中心KVM全虚拟化云服务器，采用日本CN2直连与国际BGP多线网络，标配70GB NVMe SSD固态阵列（读写>3000MB/s）、10Mbps独享不限流量带宽、独立IPv4/IPv6及DDoS防护。",
+        "url": "https://www.luckvm.com/zh/jp-cloud-server.html",
+        "category": "Infrastructure as a Service (IaaS) / Cloud VPS",
+        "offers": {
+          "@type": "AggregateOffer",
+          "priceCurrency": "USD",
+          "lowPrice": "11.00",
+          "highPrice": "220.00",
+          "offerCount": "2",
+          "offers": [
+            { "@type": "Offer", "name": "日本东京 CN2 云服务器入门款 (1C/1G/70G NVMe/10Mbps CN2)", "price": "11.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.luckvm.com/zh/jp-cloud-server.html" },
+            { "@type": "Offer", "name": "日本东京标准独立物理机 (Xeon 6138 20核 / 32GB DDR4 / 1TB SSD / 20M独享 / 3 IPv4)", "price": "220.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.luckvm.com/zh/physical-server-purchase.html" }
+          ]
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-body: #f6f8fa;
+      --bg-surface: #ffffff;
+      --bg-code: #0d1117;
+      --text-primary: #1f2328;
+      --text-secondary: #59636e;
+      --border-color: #d1d9e0;
+      --accent-blue: #0969da;
+      --accent-blue-hover: #0550ae;
+      --badge-bg: #ddf4ff;
+      --badge-text: #0969da;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-body);
+      color: var(--text-primary);
+      line-height: 1.65;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      background-color: #24292f;
+      color: #ffffff;
+      padding: 10px 16px;
+      border-bottom: 1px solid #30363d;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 15.5px;
+      color: #ffffff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-tag {
+      background: #0969da;
+      color: #ffffff;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 14px;
+      font-size: 13px;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+    }
+
+    .top-nav a { color: #e6edf3; text-decoration: none; min-height: 36px; display: inline-flex; align-items: center; }
+
+    .layout-wrapper {
+      max-width: 1180px;
+      margin: 24px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 68px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 13.5px; }
+    .toc-list a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .toc-list a:hover { background: var(--bg-body); color: var(--accent-blue); }
+
+    .sidebar-cta {
+      background: #f0f6fc;
+      border: 1px solid #b6e3ff;
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-cta-btn {
+      background: var(--accent-blue);
+      color: #ffffff;
+      text-decoration: none;
+      text-align: center;
+      min-height: 42px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-toc {
+      display: none;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px 14px;
+    }
+
+    .mobile-toc summary {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--accent-blue);
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .mobile-toc summary::-webkit-details-marker { display: none; }
+    .mobile-toc summary::after { content: "▼ 展开章节"; font-size: 12px; }
+    .mobile-toc[open] summary::after { content: "▲ 收起"; }
+
+    .doc-main {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      min-width: 0;
+    }
+
+    .breadcrumb { font-size: 12.5px; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .breadcrumb a { color: var(--accent-blue); text-decoration: none; }
+
+    .doc-header { border-bottom: 1px solid var(--border-color); padding-bottom: 20px; display: flex; flex-direction: column; gap: 14px; }
+    .tech-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tech-badge {
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid #b6e3ff;
+    }
+
+    h1 { font-size: clamp(20px, 4vw, 28px); font-weight: 700; line-height: 1.3; }
+    .doc-lead { font-size: 14.5px; color: var(--text-secondary); }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      background: var(--bg-body);
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .kpi-item { display: flex; flex-direction: column; gap: 2px; }
+    .kpi-code { font-family: var(--font-mono); font-size: clamp(16px, 2.5vw, 20px); font-weight: 700; color: var(--accent-blue); }
+    .kpi-desc { font-size: 12px; color: var(--text-secondary); }
+
+    section { display: flex; flex-direction: column; gap: 14px; }
+    h2 { font-size: clamp(17px, 3vw, 20px); font-weight: 700; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+    h3 { font-size: 15.5px; font-weight: 700; margin-top: 4px; }
+
+    .table-container { width: 100%; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+    th { background: var(--bg-body); font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+    tr:last-child td { border-bottom: none; }
+    tr.recommended-row td { background-color: #f0f6fc; }
+
+    .code-block {
+      background: var(--bg-code);
+      color: #e6edf3;
+      border-radius: 8px;
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.55;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .code-comment { color: #8b949e; }
+
+    .checklist-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .check-card { border: 1px solid var(--border-color); border-radius: 6px; padding: 14px; background: var(--bg-body); }
+    .check-card h3 { font-size: 14.5px; margin-bottom: 6px; color: var(--accent-blue); }
+    .check-card p { font-size: 13px; color: var(--text-secondary); }
+
+    .action-banner {
+      background: #f0f6fc;
+      border: 1px solid #b6e3ff;
+      border-radius: 8px;
+      padding: 18px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-group { display: flex; flex-wrap: wrap; gap: 10px; }
+    .btn-solid, .btn-outline {
+      min-height: 44px;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-solid { background: var(--accent-blue); color: #ffffff; }
+    .btn-outline { background: #ffffff; color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+
+    .doc-footer {
+      max-width: 1180px;
+      margin: 20px auto 40px;
+      padding: 0 16px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .doc-footer a { color: var(--accent-blue); text-decoration: none; }
+
+    .mobile-sticky-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      padding: 10px 14px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+      z-index: 200;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .layout-wrapper { grid-template-columns: 1fr; margin: 12px auto; }
+      .sidebar { display: none; }
+      .mobile-toc { display: block; }
+      .checklist-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      body { padding-bottom: 72px; }
+      .doc-main { padding: 18px 14px; gap: 22px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+      .table-container { border: none; background: transparent; }
+      table, thead, tbody, th, td, tr { display: block; width: 100%; }
+      thead tr { position: absolute; top: -9999px; left: -9999px; }
+      tbody tr {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 12px;
+        background: #ffffff;
+        overflow: hidden;
+      }
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        text-align: right;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--text-primary);
+        text-align: left;
+        flex-shrink: 0;
+      }
+
+      .action-banner { flex-direction: column; align-items: stretch; }
+      .btn-group { flex-direction: column; width: 100%; }
+      .btn-solid, .btn-outline { width: 100%; }
+      .mobile-sticky-bar { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="https://www.luckvm.com/zh/index.html" class="brand-title">
+        <span>LuckVM Docs</span>
+        <span class="brand-tag">JP-TYO / CN2</span>
+      </a>
+      <nav class="top-nav" aria-label="全球节点技术文档导航">
+        <a href="https://www.luckvm.com/zh/jp-cloud-server.html">日本云服务器</a>
+        <a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港 CN2 GIA</a>
+        <a href="https://www.luckvm.com/zh/us-cloud-server.html">美国 CN2-30M</a>
+        <a href="https://www.luckvm.com/zh/physical-server-purchase.html">东京独立物理机</a>
+        <a href="https://www.luckvm.com/zh/gpu-server-purchase.html">AI GPU 算力</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="layout-wrapper">
+    <aside class="sidebar" aria-label="桌面端文档目录">
+      <div class="sidebar-title">技术文档目录 (TOC)</div>
+      <ul class="toc-list">
+        <li><a href="#jp-network-topology">1. 东京 CN2 与东亚 BGP 拓扑</a></li>
+        <li><a href="#apac-latency-bench">2. 东亚与大陆往返延迟矩阵</a></li>
+        <li><a href="#jp-compute-specs">3. 东京 VPS 与 20核物理机规格</a></li>
+        <li><a href="#cli-verification">4. 部署前路由与 NVMe 验证</a></li>
+        <li><a href="#jp-faq">5. 架构师常见问答 (FAQ)</a></li>
+      </ul>
+      <div class="sidebar-cta">
+        <div style="font-size: 13px; font-weight: 700;">日本东京 CN2 实例交付</div>
+        <div style="font-size: 12px; color: var(--text-secondary);">1核1G / 70GB NVMe / 10Mbps独享不限流量，$11.00/月起。</div>
+        <a href="https://www.luckvm.com/zh/jp-cloud-server.html" class="sidebar-cta-btn">前往官网查看实时库存 →</a>
+      </div>
+    </aside>
+
+    <main class="doc-main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="https://www.luckvm.com/zh/index.html">LuckVM 文档中心</a>
+        <span>/</span>
+        <a href="https://www.luckvm.com/zh/cloud-server-purchase.html">云服务器 (VPS)</a>
+        <span>/</span>
+        <span>日本东京节点 (TYO)</span>
+      </nav>
+
+      <header class="doc-header">
+        <div class="tech-badges">
+          <span class="tech-badge">Zone: Tokyo (TYO)</span>
+          <span class="tech-badge">10 Mbps Dedicated CN2 + BGP</span>
+          <span class="tech-badge">70GB NVMe (&gt;3000 MB/s)</span>
+        </div>
+        <h1>LuckVM日本东京节点(TYO) CN2路由拓扑、东亚延迟矩阵与算力选型技术规范</h1>
+        <p class="doc-lead">
+          本文档面向系统架构师、跨境电商研发与游戏运维团队，深度拆解 <a href="https://www.luckvm.com/zh/jp-cloud-server.html" style="color:var(--accent-blue);font-weight:600;">LuckVM 日本东京云服务器</a> 的 CN2 直连与日本本土 BGP 多线路由拓扑、中国大陆往返延迟基准（50–70ms），以及从 $11.00/月 KVM 实例向东京 20 核 Xeon 6138 独立物理服务器（$220.00/月）扩容的硬件规范。
+        </p>
+
+        <div class="kpi-grid">
+          <div class="kpi-item">
+            <span class="kpi-code">50 - 70 ms</span>
+            <span class="kpi-desc">中国大陆直连平均 RTT</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-code">70 GB NVMe</span>
+            <span class="kpi-desc">60G+10G (&gt;3000 MB/s)</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-code">$11.00 / 月</span>
+            <span class="kpi-desc">10M 独享 CN2 不限流量</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-code">20 Cores</span>
+            <span class="kpi-desc">东京 Xeon 6138 独服可选</span>
+          </div>
+        </div>
+
+        <details class="mobile-toc">
+          <summary>快速跳转技术章节目录 (TOC)</summary>
+          <ul class="toc-list" style="padding: 8px 0;">
+            <li><a href="#jp-network-topology">1. 东京 CN2 与东亚 BGP 路由拓扑</a></li>
+            <li><a href="#apac-latency-bench">2. 东亚与中国大陆往返延迟矩阵</a></li>
+            <li><a href="#jp-compute-specs">3. 东京 VPS 与 20 核物理机规格</a></li>
+            <li><a href="#cli-verification">4. 部署前路由与 NVMe 验证指令</a></li>
+            <li><a href="#jp-faq">5. 架构师常见问答 (FAQ)</a></li>
+          </ul>
+        </details>
+      </header>
+
+      <section id="jp-network-topology">
+        <h2>1. 日本东京 (TYO) CN2 直连与东亚国际 BGP 路由架构</h2>
+        <div class="checklist-grid">
+          <div class="check-card">
+            <h3>① 日本本土毫秒级交换连接</h3>
+            <p>直连日本东京核心互联网交换节点，使日本本地 ISP 用户及东京区域 API（Amazon JP、Rakuten、LINE）访问延迟控制在数毫秒以内。</p>
+          </div>
+          <div class="check-card">
+            <h3>② 中日跨海光缆 CN2 直连优化</h3>
+            <p>去回程接入中国电信 CN2 与三网直连海缆通道，规避绕行北美的劣质国际路由，使中国大陆访问延迟稳定保持在 50–70ms。</p>
+          </div>
+          <div class="check-card">
+            <h3>③ 100% 独享端口与跨洋中继优势</h3>
+            <p>标配 10Mbps 独享不限流量端口，同时依托东京跨太平洋海缆枢纽地位，兼顾东亚与北美西海岸之间的高速数据同步。</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="apac-latency-bench">
+        <h2>2. 亚太核心直连节点网络延迟与带宽基准对比</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>测试指标</th>
+                <th>日本东京 (TYO - CN2)</th>
+                <th>香港 (HKG - CN2 GIA)</th>
+                <th>新加坡 (SIN - CN2)</th>
+                <th>韩国首尔 / 中国台湾</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="recommended-row">
+                <td data-label="测试指标"><strong>中国大陆平均延迟</strong></td>
+                <td data-label="日本东京 CN2"><strong>50 - 70 ms</strong></td>
+                <td data-label="香港 CN2 GIA">5 - 22 ms (沿海&lt;10ms)</td>
+                <td data-label="新加坡 CN2">40 - 60 ms</td>
+                <td data-label="韩国/台湾 CN2">东亚低延迟直连</td>
+              </tr>
+              <tr class="recommended-row">
+                <td data-label="测试指标"><strong>标配独享带宽</strong></td>
+                <td data-label="日本东京 CN2"><strong>10 Mbps 独享不限流</strong></td>
+                <td data-label="香港 CN2 GIA">10 Mbps 独享不限流</td>
+                <td data-label="新加坡 CN2">10 Mbps 独享不限流</td>
+                <td data-label="韩国/台湾 CN2">10 Mbps 独享不限流</td>
+              </tr>
+              <tr>
+                <td data-label="测试指标"><strong>入门硬件存储</strong></td>
+                <td data-label="日本东京 CN2">1C / 1G / 70GB NVMe</td>
+                <td data-label="香港 CN2 GIA">1C / 1G / 70GB NVMe</td>
+                <td data-label="新加坡 CN2">1C / 1G / 70GB NVMe</td>
+                <td data-label="韩国/台湾 CN2">1C / 1G / 70GB NVMe</td>
+              </tr>
+              <tr>
+                <td data-label="测试指标"><strong>入门月付起价</strong></td>
+                <td data-label="日本东京 CN2"><strong>$11.00 / 月</strong></td>
+                <td data-label="香港 CN2 GIA">$8.80 / 月</td>
+                <td data-label="新加坡 CN2">$11.00 / 月</td>
+                <td data-label="韩国/台湾 CN2">$11.00 / 月</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="jp-compute-specs">
+        <h2>3. 日本东京可用区云服务器与独立物理服务器规格矩阵</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>资源形态类别</th>
+                <th>处理器核心</th>
+                <th>内存与存储配置</th>
+                <th>独享带宽与流量</th>
+                <th>IP 地址配额</th>
+                <th>计费起价</th>
+                <th>部署入口</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="recommended-row">
+                <td data-label="资源形态"><strong>东京 CN2 云服务器</strong></td>
+                <td data-label="处理器核心">1 vCPU (弹性扩容)</td>
+                <td data-label="内存与存储">1G RAM / 60G+10G NVMe</td>
+                <td data-label="带宽与流量">10 Mbps CN2 独享不限</td>
+                <td data-label="IP 配额">1 IPv4 + IPv6</td>
+                <td data-label="计费起价"><strong>$11.00 / 月</strong></td>
+                <td data-label="部署入口"><a href="https://www.luckvm.com/zh/jp-cloud-server.html" style="color:var(--accent-blue);font-weight:700;">订购 VPS →</a></td>
+              </tr>
+              <tr>
+                <td data-label="资源形态"><strong>东京标准独立物理机</strong></td>
+                <td data-label="处理器核心"><strong>Xeon 6138 (20核)</strong></td>
+                <td data-label="内存与存储"><strong>32GB DDR4</strong> / 1TB SSD</td>
+                <td data-label="带宽与流量">20 Mbps 独享不限流量</td>
+                <td data-label="IP 配额"><strong>3 个独立 IPv4</strong></td>
+                <td data-label="计费起价"><strong>$220.00 / 月</strong></td>
+                <td data-label="部署入口"><a href="https://www.luckvm.com/zh/physical-server-purchase.html" style="color:var(--accent-blue);font-weight:700;">订购物理机 →</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="cli-verification">
+        <h2>4. 实例交付后网络路由与 70GB NVMe 磁盘基准验证指令</h2>
+        <div class="code-block">
+<span class="code-comment"># 1. 验证日本东京实例至中国大陆回程路由跳数与实时 RTT 延迟</span>
+mtr -r -c 50 -n &lt;目标客户端公网IP&gt;
+
+<span class="code-comment"># 2. 测试 70GB NVMe SSD 阵列的顺序读写性能 (&gt;3000 MB/s)</span>
+fio --name=jp_nvme --rw=readwrite --bs=1M --size=2G --numjobs=1 --ioengine=libaio --direct=1 --group_reporting
+        </div>
+      </section>
+
+      <section id="jp-faq">
+        <h2>5. 日本东京节点架构选型常见问答 (Engineering FAQ)</h2>
+        <h3>Q1：东京独立物理机 ($220/月) 标配的 3 个独立 IPv4 有何用途？</h3>
+        <p>日本东京 Xeon 6138（20核 / 32GB DDR4 / 1TB SSD）标准物理服务器默认包含 <strong>3 个独立 IPv4 地址</strong>，支持将前端 Web 站点、后端 API 网关与数据库管理接口绑定在不同公网 IP 上实现业务隔离，或用于多站点独立 SSL 部署。</p>
+
+        <h3>Q2：日本云服务器付款后多久交付？支持哪些支付方式？</h3>
+        <p>云服务器在支付后 <strong>1–5 分钟内自动开通</strong>；物理机通常在 1–24 小时内交付。全面支持<strong>支付宝 (Alipay)、USDT、信用卡/借记卡、Google Pay 与对公银行转账</strong>。</p>
+      </section>
+
+      <div class="action-banner">
+        <div>
+          <div style="font-size: 16px; font-weight: 700;">立即部署 LuckVM 日本东京 CN2 云服务器或 20 核独立物理机</div>
+          <div style="font-size: 13px; color: var(--text-secondary);">大陆直连 50-70ms · 70GB NVMe 阵列 · 免备案 1 分钟自动交付 ($11.00/月起)</div>
+        </div>
+        <div class="btn-group">
+          <a href="https://www.luckvm.com/zh/jp-cloud-server.html" class="btn-solid">前往官网选购日本 VPS</a>
+          <a href="https://www.luckvm.com/zh/physical-server-purchase.html" class="btn-outline">查看东京 $220/月 物理机</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="doc-footer">
+    <div>© 2026 LuckVM Cloud Infrastructure Documentation.</div>
+    <div>
+      全球节点文档：<a href="https://www.luckvm.com/zh/jp-cloud-server.html">日本 CN2 ($11/月)</a> ·
+      <a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港 CN2 GIA ($8.80/月)</a> ·
+      <a href="https://www.luckvm.com/zh/us-cloud-server.html">美国 CN2-30M ($8.80/月)</a> ·
+      <a href="https://www.luckvm.com/zh/sg-cloud-server.html">新加坡 CN2 ($11/月)</a>
+    </div>
+  </footer>
+
+  <!-- 手机端专属底部固定转化栏 -->
+  <div class="mobile-sticky-bar">
+    <div>
+      <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">日本东京 CN2 云服务器</div>
+      <div style="font-size: 12px; color: var(--accent-blue); font-weight: 600;">$11.00/月起 · 10M独享 · 70G NVMe</div>
+    </div>
+    <a href="https://www.luckvm.com/zh/jp-cloud-server.html" class="btn-solid" style="min-height: 40px; padding: 8px 16px; font-size: 13.5px;">立即选购 →</a>
+  </div>
+
+</body>
+</html>
