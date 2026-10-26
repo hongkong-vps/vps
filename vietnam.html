@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+  <title>越南CN2云服务器网络评测与东南亚70GB NVMe架构选型规范-LuckVM</title>
+  <meta name="description" content="深度解析LuckVM越南数据中心(VN) CN2直连与东南亚国际BGP多线路由架构。提供70GB NVMe (>3000MB/s) 存储I/O参数、10Mbps独享不限流量带宽规范，以及越南CN2节点($11.00/月)与新加坡CN2、马来西亚MyIX、印尼JKT-IX节点的分布式组网选型指南。">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+
+  <link rel="canonical" href="https://hongkong-vps.github.io/vps/vietnam.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://hongkong-vps.github.io/vps/vietnam.html">
+  <link rel="alternate" hreflang="x-default" href="https://luckvm-cloud.github.io/en/vps/vietnam/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="LuckVM Infrastructure & Network Docs">
+  <meta property="og:title" content="越南CN2云服务器网络评测与东南亚70GB NVMe架构选型规范 - LuckVM">
+  <meta property="og:description" content="搭载越南CN2直连与国际BGP多线，标配10Mbps独享不限流量带宽与70GB NVMe固态阵列，$11.00/月起，赋能越南跨境电商与驻越企业ERP同步。">
+  <meta property="og:url" content="https://hongkong-vps.github.io/vps/vietnam.html">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "LuckVM越南节点(VN) CN2路由拓扑、70GB NVMe存储基准与东南亚分布式架构规范",
+        "description": "面向系统架构师、东南亚跨境电商研发与驻越跨国企业IT团队的技术文档，涵盖越南CN2直连与本地ISP互联、70GB NVMe磁盘性能及东南亚多节点协同选型。",
+        "inLanguage": "zh-CN",
+        "datePublished": "2026-10-13",
+        "dateModified": "2026-10-25",
+        "author": { "@type": "Organization", "name": "LuckVM Cloud Infrastructure Team", "url": "https://www.luckvm.com/zh/index.html" },
+        "publisher": { "@type": "Organization", "name": "LuckVM", "url": "https://www.luckvm.com/zh/index.html" },
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "https://hongkong-vps.github.io/vps/vietnam.html" }
+      },
+      {
+        "@type": "Product",
+        "name": "LuckVM 越南 CN2 云服务器 (Vietnam KVM NVMe VPS)",
+        "brand": { "@type": "Brand", "name": "LuckVM" },
+        "description": "越南数据中心KVM全虚拟化云服务器，采用越南CN2直连与国际BGP多线网络，标配70GB NVMe SSD固态阵列（读写>3000MB/s）、10Mbps独享不限流量带宽、独立IPv4/IPv6及DDoS防护。",
+        "url": "https://www.luckvm.com/zh/vn-cloud-server.html",
+        "category": "Infrastructure as a Service (IaaS) / Cloud VPS",
+        "offers": {
+          "@type": "Offer",
+          "name": "越南 CN2 云服务器入门款 (1C/1G/70G NVMe/10Mbps CN2)",
+          "price": "11.00",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.luckvm.com/zh/vn-cloud-server.html"
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-body: #f6f8fa;
+      --bg-surface: #ffffff;
+      --bg-code: #0d1117;
+      --text-primary: #1f2328;
+      --text-secondary: #59636e;
+      --border-color: #d1d9e0;
+      --accent-blue: #0969da;
+      --accent-blue-hover: #0550ae;
+      --badge-bg: #ddf4ff;
+      --badge-text: #0969da;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-body);
+      color: var(--text-primary);
+      line-height: 1.65;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      background-color: #24292f;
+      color: #ffffff;
+      padding: 10px 16px;
+      border-bottom: 1px solid #30363d;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 15.5px;
+      color: #ffffff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-tag {
+      background: #0969da;
+      color: #ffffff;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 14px;
+      font-size: 13px;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+    }
+
+    .top-nav a { color: #e6edf3; text-decoration: none; min-height: 36px; display: inline-flex; align-items: center; }
+
+    .layout-wrapper {
+      max-width: 1180px;
+      margin: 24px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 68px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 13.5px; }
+    .toc-list a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .toc-list a:hover { background: var(--bg-body); color: var(--accent-blue); }
+
+    .sidebar-cta {
+      background: #f0f6fc;
+      border: 1px solid #b6e3ff;
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-cta-btn {
+      background: var(--accent-blue);
+      color: #ffffff;
+      text-decoration: none;
+      text-align: center;
+      min-height: 42px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-toc {
+      display: none;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px 14px;
+    }
+
+    .mobile-toc summary {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--accent-blue);
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .mobile-toc summary::-webkit-details-marker { display: none; }
+    .mobile-toc summary::after { content: "▼ 展开章节"; font-size: 12px; }
+    .mobile-toc[open] summary::after { content: "▲ 收起"; }
+
+    .doc-main {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      min-width: 0;
+    }
+
+    .breadcrumb { font-size: 12.5px; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .breadcrumb a { color: var(--accent-blue); text-decoration: none; }
+
+    .doc-header { border-bottom: 1px solid var(--border-color); padding-bottom: 20px; display: flex; flex-direction: column; gap: 14px; }
+    .tech-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tech-badge {
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid #b6e3ff;
+    }
+
+    h1 { font-size: clamp(20px, 4vw, 28px); font-weight: 700; line-height: 1.3; }
+    .doc-lead { font-size: 14.5px; color: var(--text-secondary); }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      background: var(--bg-body);
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .kpi-item { display: flex; flex-direction: column; gap: 2px; }
+    .kpi-code { font-family: var(--font-mono); font-size: clamp(16px, 2.5vw, 20px); font-weight: 700; color: var(--accent-blue); }
+    .kpi-desc { font-size: 12px; color: var(--text-secondary); }
+
+    section { display: flex; flex-direction: column; gap: 14px; }
+    h2 { font-size: clamp(17px, 3vw, 20px); font-weight: 700; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+    h3 { font-size: 15.5px; font-weight: 700; margin-top: 4px; }
+
+    .table-container { width: 100%; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+    th { background: var(--bg-body); font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+    tr:last-child td { border-bottom: none; }
+    tr.recommended-row td { background-color: #f0f6fc; }
+
+    .code-block {
+      background: var(--bg-code);
+      color: #e6edf3;
+      border-radius: 8px;
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.55;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .code-comment { color: #8b949e; }
+
+    .checklist-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .check-card { border: 1px solid var(--border-color); border-radius: 6px; padding: 14px; background: var(--bg-body); }
+    .check-card h3 { font-size: 14.5px; margin-bottom: 6px; color: var(--accent-blue); }
+    .check-card p { font-size: 13px; color: var(--text-secondary); }
+
+    .action-banner {
+      background: #f0f6fc;
+      border: 1px solid #b6e3ff;
+      border-radius: 8px;
+      padding: 18px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-group { display: flex; flex-wrap: wrap; gap: 10px; }
+    .btn-solid, .btn-outline {
+      min-height: 44px;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-solid { background: var(--accent-blue); color: #ffffff; }
+    .btn-outline { background: #ffffff; color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+
+    .doc-footer {
+      max-width: 1180px;
+      margin: 20px auto 40px;
+      padding: 0 16px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .doc-footer a { color: var(--accent-blue); text-decoration: none; }
+
+    .mobile-sticky-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      padding: 10px 14px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+      z-index: 200;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .layout-wrapper { grid-template-columns: 1fr; margin: 12px auto; }
+      .sidebar { display: none; }
+      .mobile-toc { display: block; }
+      .checklist-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      body { padding-bottom: 72px; }
+      .doc-main { padding: 18px 14px; gap: 22px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+      .table-container { border: none; background: transparent; }
+      table, thead, tbody, th, td, tr { display: block; width: 100%; }
+      thead tr { position: absolute; top: -9999px; left: -9999px; }
+      tbody tr {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 12px;
+        background: #ffffff;
+        overflow: hidden;
+      }
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        text-align: right;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--text-primary);
+        text-align: left;
+        flex-shrink: 0;
+      }
+
+      .action-banner { flex-direction: column; align-items: stretch; }
+      .btn-group { flex-direction: column; width: 100%; }
+      .btn-solid, .btn-outline { width: 100%; }
+      .mobile-sticky-bar { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="https://www.luckvm.com/zh/index.html" class="brand-title">
+        <span>LuckVM Docs</span>
+        <span class="brand-tag">VN-CN2 / BGP</span>
+      </a>
+      <nav class="top-nav" aria-label="全球节点技术文档导航">
+        <a href="https://www.luckvm.com/zh/vn-cloud-server.html">越南云服务器</a>
+        <a href="https://www.luckvm.com/zh/sg-cloud-server.html">新加坡 CN2</a>
+        <a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港 CN2 GIA</a>
+        <a href="https://www.luckvm.com/zh/my-cloud-server.html">马来西亚 1Gbps</a>
+        <a href="https://www.luckvm.com/zh/id-cloud-server.html">印尼 1Gbps</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="layout-wrapper">
+    <aside class="sidebar" aria-label="桌面端文档目录">
+      <div class="sidebar-title">技术文档目录 (TOC)</div>
+      <ul class="toc-list">
+        <li><a href="#vn-network-topology">1. 越南 CN2 与东盟 BGP 拓扑</a></li>
+        <li><a href="#asean-architecture-compare">2. 东南亚节点双轨制选型对比</a></li>
+        <li><a href="#vn-workload-specs">3. 越南 KVM 硬件规格与场景</a></li>
+        <li><a href="#cli-verification">4. 部署前路由与 NVMe 验证</a></li>
+        <li><a href="#vn-faq">5. 架构师常见问答 (FAQ)</a></li>
+      </ul>
+      <div class="sidebar-cta">
+        <div style="font-size: 13px; font-weight: 700;">越南 CN2 实例交付</div>
+        <div style="font-size: 12px; color: var(--text-secondary);">1核1G / 70GB NVMe / 10Mbps独享不限流量，$11.00/月起。</div>
+        <a href="https://www.luckvm.com/zh/vn-cloud-server.html" class="sidebar-cta-btn">前往官网查看实时库存 →</a>
+      </div>
+    </aside>
+
+    <main class="doc-main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="https://www.luckvm.com/zh/index.html">LuckVM 文档中心</a>
+        <span>/</span>
+        <a href="https://www.luckvm.com/zh/cloud-server-purchase.html">云服务器 (VPS)</a>
+        <span>/</span>
+        <span>越南节点 (VN)</span>
+      </nav>
+
+      <header class="doc-header">
+        <div class="tech-badges">
+          <span class="tech-badge">Zone: Vietnam (VN)</span>
+          <span class="tech-badge">10 Mbps Dedicated CN2 + BGP</span>
+          <span class="tech-badge">70GB NVMe (&gt;3000 MB/s)</span>
+        </div>
+        <h1>LuckVM越南节点(VN) CN2路由拓扑、70GB NVMe存储基准与东南亚分布式架构规范</h1>
+        <p class="doc-lead">
+          本文档面向系统架构师、东南亚跨境电商研发与驻越跨国企业 IT 团队，深度拆解 <a href="https://www.luckvm.com/zh/vn-cloud-server.html" style="color:var(--accent-blue);font-weight:600;">LuckVM 越南云服务器</a> 的中越 CN2 直连与东南亚 BGP 路由架构、70GB NVMe 固态阵列读写性能，以及越南节点（$11.00/月）与新加坡、马来西亚、印尼节点的协同组网规范。
+        </p>
+
+        <div class="kpi-grid">
+          <div class="kpi-item">
+            <span class="kpi-code">越南 CN2</span>
+            <span class="kpi-desc">中越直连 + 本土 BGP</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-code">70 GB NVMe</span>
+            <span class="kpi-desc">60G+10G (&gt;3000 MB/s)</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-code">$11.00 / 月</span>
+            <span class="kpi-desc">10M 独享带宽不限流量</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-code">1 - 5 Min</span>
+            <span class="kpi-desc">免备案自动化实例交付</span>
+          </div>
+        </div>
+
+        <details class="mobile-toc">
+          <summary>快速跳转技术章节目录 (TOC)</summary>
+          <ul class="toc-list" style="padding: 8px 0;">
+            <li><a href="#vn-network-topology">1. 越南 CN2 与东盟 BGP 路由拓扑</a></li>
+            <li><a href="#asean-architecture-compare">2. 东南亚节点双轨制选型对比</a></li>
+            <li><a href="#vn-workload-specs">3. 越南 KVM 硬件规格与应用场景</a></li>
+            <li><a href="#cli-verification">4. 部署前路由与 NVMe 验证指令</a></li>
+            <li><a href="#vn-faq">5. 架构师常见问答 (FAQ)</a></li>
+          </ul>
+        </details>
+      </header>
+
+      <section id="vn-network-topology">
+        <h2>1. 越南 (VN) 中越 CN2 直连与本土 ISP 多线 BGP 路由架构</h2>
+        <div class="checklist-grid">
+          <div class="check-card">
+            <h3>① 越南本土三大运营商直连</h3>
+            <p>直通越南本地核心交换节点与主流宽带/移动网络，确保河内、胡志明市及越南全境终端用户访问电商独立站与本地 APP 达到毫秒级响应。</p>
+          </div>
+          <div class="check-card">
+            <h3>② 中越跨国 CN2 专线直通</h3>
+            <p>去回程接入中国电信 CN2 与三网直连通道，解决传统东南亚线路绕行造成的延迟虚高问题，保障中国国内总部与越南分支机构 ERP 实时同步。</p>
+          </div>
+          <div class="check-card">
+            <h3>③ 100% 独享带宽与双栈 IP</h3>
+            <p>标配 10Mbps 独享不限流量端口，晚高峰不限速；默认分配独立纯净 IPv4 + IPv6 地址，并自带基础 DDoS 流量清洗保护。</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="asean-architecture-compare">
+        <h2>2. 东南亚四大节点（越南 / 新加坡 / 马来西亚 / 印尼）双轨制技术规格对比</h2>
+        <p>
+          在 LuckVM 的东南亚基础设施布局中，<strong>越南与新加坡属于“70GB NVMe + CN2 直连序列”（$11.00/月）</strong>，而<strong>马来西亚与印尼属于“Tier-1 IX 1Gbps 轻量边缘序列”（$4.93/月）</strong>。以下为工程选型对比：
+        </p>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>技术指标</th>
+                <th>越南 (VN - CN2)</th>
+                <th>新加坡 (SIN - CN2)</th>
+                <th>马来西亚 (MyIX)</th>
+                <th>印度尼西亚 (JKT-IX)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="recommended-row">
+                <td data-label="技术指标"><strong>核心网络架构</strong></td>
+                <td data-label="越南 CN2"><strong>越南 CN2 + 国际 BGP</strong></td>
+                <td data-label="新加坡 CN2">新加坡 CN2 + 东盟 BGP</td>
+                <td data-label="马来西亚 MyIX">吉隆坡 MyIX 本地互联</td>
+                <td data-label="印尼 JKT-IX">雅加达 JKT-IX 本地互联</td>
+              </tr>
+              <tr class="recommended-row">
+                <td data-label="技术指标"><strong>入门计算与存储</strong></td>
+                <td data-label="越南 CN2"><strong>1C / 1G / 70GB NVMe</strong></td>
+                <td data-label="新加坡 CN2">1C / 1G / 70GB NVMe</td>
+                <td data-label="马来西亚 MyIX">1C / 512MB / 5GB SSD</td>
+                <td data-label="印尼 JKT-IX">1C / 512MB / 5GB SSD</td>
+              </tr>
+              <tr>
+                <td data-label="技术指标"><strong>带宽端口规格</strong></td>
+                <td data-label="越南 CN2"><strong>10 Mbps 独享不限流</strong></td>
+                <td data-label="新加坡 CN2">10 Mbps 独享不限流</td>
+                <td data-label="马来西亚 MyIX">1 Gbps 端口</td>
+                <td data-label="印尼 JKT-IX">1 Gbps 端口</td>
+              </tr>
+              <tr>
+                <td data-label="技术指标"><strong>最佳负载定位</strong></td>
+                <td data-label="越南 CN2"><strong>越南本土商城、驻越ERP、完整数据库</strong></td>
+                <td data-label="新加坡 CN2">东南亚总部核心库与 AI 算力</td>
+                <td data-label="马来西亚 MyIX">马来本地轻量API与前端缓存</td>
+                <td data-label="印尼 JKT-IX">印尼本地轻量API与边缘分发</td>
+              </tr>
+              <tr>
+                <td data-label="技术指标"><strong>入门月付起价</strong></td>
+                <td data-label="越南 CN2"><strong>$11.00 / 月</strong></td>
+                <td data-label="新加坡 CN2">$11.00 / 月</td>
+                <td data-label="马来西亚 MyIX">$4.93 / 月</td>
+                <td data-label="印尼 JKT-IX">$4.93 / 月</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="vn-workload-specs">
+        <h2>3. 越南可用区 KVM 云服务器配置与业务部署矩阵</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>配置方案</th>
+                <th>CPU / 内存</th>
+                <th>NVMe 存储容量</th>
+                <th>独享带宽与流量</th>
+                <th>适用工程场景</th>
+                <th>月付起价</th>
+                <th>部署入口</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="recommended-row">
+                <td data-label="配置方案"><strong>越南 CN2 标准入门款</strong></td>
+                <td data-label="CPU / 内存">1 vCPU / 1 GB</td>
+                <td data-label="NVMe 存储">60G+10G (70GB)</td>
+                <td data-label="带宽与流量">10 Mbps CN2 独享不限</td>
+                <td data-label="适用场景">越南外贸站、轻量电商、API网关</td>
+                <td data-label="月付起价"><strong>$11.00 / 月</strong></td>
+                <td data-label="部署入口"><a href="https://www.luckvm.com/zh/vn-cloud-server.html" style="color:var(--accent-blue);font-weight:700;">立即订购 →</a></td>
+              </tr>
+              <tr>
+                <td data-label="配置方案"><strong>越南弹性高并发实例</strong></td>
+                <td data-label="CPU / 内存">按需升级多核/大内存</td>
+                <td data-label="NVMe 存储">70GB+ NVMe 阵列</td>
+                <td data-label="带宽与流量">10M+ 独享 (可升级专线)</td>
+                <td data-label="适用场景">驻越工厂ERP、高并发商城、直播后端</td>
+                <td data-label="月付起价"><strong>在线无损扩容</strong></td>
+                <td data-label="部署入口"><a href="https://www.luckvm.com/zh/vn-cloud-server.html" style="color:var(--accent-blue);font-weight:700;">定制配置 →</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="cli-verification">
+        <h2>4. 实例交付后网络路由与 70GB NVMe 磁盘基准验证指令</h2>
+        <div class="code-block">
+<span class="code-comment"># 1. 验证越南实例至中国大陆及越南本地运营商的去回程路由与实时 RTT 延迟</span>
+mtr -r -c 50 -n &lt;目标客户端公网IP&gt;
+
+<span class="code-comment"># 2. 测试 70GB NVMe SSD 阵列的顺序读写性能 (&gt;3000 MB/s)</span>
+fio --name=vn_nvme --rw=readwrite --bs=1M --size=2G --numjobs=1 --ioengine=libaio --direct=1 --group_reporting
+        </div>
+      </section>
+
+      <section id="vn-faq">
+        <h2>5. 越南节点架构选型常见问答 (Engineering FAQ)</h2>
+        <h3>Q1：为什么越南节点标配 70GB NVMe，对跨境电商和企业 ERP 至关重要？</h3>
+        <p>跨境独立站（如 WooCommerce/Magento）包含海量商品多图与交易日志，而驻越企业的 ERP/OA 系统则需要长期保存关系型数据库备份。LuckVM 越南节点直接标配 <strong>60GB 系统盘 + 10GB 数据盘（共 70GB NVMe SSD，读写 >3000 MB/s）</strong>，无需频繁挂载昂贵的附加云盘即可满足长期生产运行与本地快照备份需求。</p>
+
+        <h3>Q2：越南云服务器付款后多久交付？支持哪些支付渠道？</h3>
+        <p>免备案即买即用，支付后 <strong>1–5 分钟内自动开通</strong>并发送凭证至邮箱。全面支持<strong>支付宝 (Alipay)、USDT、信用卡/借记卡、Google Pay 与对公银行转账</strong>。</p>
+      </section>
+
+      <div class="action-banner">
+        <div>
+          <div style="font-size: 16px; font-weight: 700;">立即部署 LuckVM 越南 CN2 直连云服务器</div>
+          <div style="font-size: 13px; color: var(--text-secondary);">中越 CN2 直连 · 70GB NVMe 阵列 · 免备案 1 分钟自动交付 ($11.00/月起)</div>
+        </div>
+        <div class="btn-group">
+          <a href="https://www.luckvm.com/zh/vn-cloud-server.html" class="btn-solid">前往官网选购越南 VPS</a>
+          <a href="https://www.luckvm.com/zh/sg-cloud-server.html" class="btn-outline">查看新加坡 CN2 节点</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="doc-footer">
+    <div>© 2026 LuckVM Cloud Infrastructure Documentation.</div>
+    <div>
+      全球节点文档：<a href="https://www.luckvm.com/zh/vn-cloud-server.html">越南 CN2 ($11/月)</a> ·
+      <a href="https://www.luckvm.com/zh/sg-cloud-server.html">新加坡 CN2 ($11/月)</a> ·
+      <a href="https://www.luckvm.com/zh/hk-cloud-server.html">香港 CN2 GIA ($8.80/月)</a> ·
+      <a href="https://www.luckvm.com/zh/my-cloud-server.html">马来西亚 ($4.93/月)</a>
+    </div>
+  </footer>
+
+  <!-- 手机端专属底部固定转化栏 -->
+  <div class="mobile-sticky-bar">
+    <div>
+      <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">越南 CN2 云服务器</div>
+      <div style="font-size: 12px; color: var(--accent-blue); font-weight: 600;">$11.00/月起 · 10M独享 · 70G NVMe</div>
+    </div>
+    <a href="https://www.luckvm.com/zh/vn-cloud-server.html" class="btn-solid" style="min-height: 40px; padding: 8px 16px; font-size: 13.5px;">立即选购 →</a>
+  </div>
+
+</body>
+</html>
